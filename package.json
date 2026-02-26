@@ -1,0 +1,24 @@
+{
+  "name": "software-engineering-project",
+  "version": "1.0.0",
+  "description": "App for CSCE 3444 project",
+  "homepage": "https://github.com/gitadrian417/Software-Engineering-Project#readme",
+  "bugs": {
+    "url": "https://github.com/gitadrian417/Software-Engineering-Project/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gitadrian417/Software-Engineering-Project.git"
+  },
+  "license": "ISC",
+  "author": "Group 9",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "electron": "^40.6.1"
+  }
+}
