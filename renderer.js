@@ -25,6 +25,11 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
 })
 
 function addTask(name, category) {
+
+  // Add task to backend
+  window.electronAPI.appendTask(name, category);
+
+  // Add task to HTML page
   const div1 = document.createElement("div");
   const h2 = document.createElement("h2");
   const p = document.createElement("p");

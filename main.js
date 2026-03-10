@@ -1,6 +1,13 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron/main')
 const path = require('node:path')
 
+function appendTask(event, name, category) {
+  //console.log('name: ' + name);
+  //console.log('category: ' + category);
+  tasks.push(new Task(name, category, 0, 0));
+  console.log(tasks);
+}
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -10,24 +17,25 @@ const createWindow = () => {
     }
   })
 
-  win.loadFile('index.html')
+  win.loadFile('index.html');
   win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('ping', () => 'pong')
-  createWindow()
+  ipcMain.handle('ping', () => 'pong');
+  ipcMain.on('add-task', appendTask);
+  createWindow();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
+      createWindow();
     }
   })
 })
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
 })
 
@@ -47,3 +55,4 @@ class Task {
 }
 
 tasks = []
+
