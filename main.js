@@ -5,7 +5,7 @@ function appendTask(event, name, category) {
   //console.log('name: ' + name);
   //console.log('category: ' + category);
   tasks.push(new Task(name, category, 0, 0));
-  console.log(tasks);
+  //console.log(tasks);
 }
 
 function removeTask(event, name) {
@@ -22,7 +22,7 @@ const createWindow = () => {
   })
 
   win.loadFile('index.html');
-  win.webContents.openDevTools()
+  //win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {

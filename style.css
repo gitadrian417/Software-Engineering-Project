@@ -1,0 +1,23 @@
+body {
+    background-color: darkslategray;
+    font-family: 'Verdana', sans-serif;
+}
+
+.tasks-card-view {
+    background-color: darkslategray;
+}
+
+.task-card {
+    background-color: rgb(63, 97, 97);
+    border: 10px;
+    border-style: solid;
+    border-radius: 10px;
+    border-color: rgb(38, 63, 63);
+    padding: 10px;
+    margin: 10px;
+}
+
+.task-card-text {
+    color: azure;
+    text-shadow: 4px 4px 5px grey;
+}

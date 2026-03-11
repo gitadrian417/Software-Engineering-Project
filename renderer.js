@@ -37,7 +37,9 @@ function createTask(name, category) {
   const delButton = document.createElement("button");
 
   div1.id = "task-div-" + name;
-  div1.className = "task-div-class";
+  div1.className = "task-card";
+  h2.className = 'task-card-text';
+  p.className = 'task-card-text';
   h2.innerText = name;
   p.innerText = category;
   editButton.innerText = "Edit";
@@ -69,3 +71,8 @@ function unhideElement(element) {
     element.removeAttribute('hidden');
   }
 }
+
+// Testing
+createTask("Assignment 1", "CSCE 3444");
+createTask("Assignment 2", "CSCE 4240");
+createTask("Assignment 3", "CSCE 4650");

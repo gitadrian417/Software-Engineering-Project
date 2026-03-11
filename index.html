@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+  <link rel="stylesheet" href="style.css">
   <head>
     <meta charset="UTF-8" />
     <meta
@@ -13,15 +14,16 @@
     <title>Hello from Electron renderer!</title>
   </head>
   <body>
-    <button id="add-new-task">Add New Task</button>
-    <form id="task-edit-form" hidden>
-      <label for="task-name-edit">Task Name:</label>
-      <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
-      <label for="task-category-edit">Task Category:</label>
-      <input type="text" id="task-category-edit" name="task-category-edit"><br><br>
-      <input type="submit" value="Submit">
-    </form>
-    <div class="tasks-card-view" id="tasks-card-view"></div>
+    <div class="tasks-card-view" id="tasks-card-view">
+      <button id="add-new-task">Add New Task</button>
+      <form id="task-edit-form" hidden>
+        <label for="task-name-edit">Task Name:</label>
+        <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
+        <label for="task-category-edit">Task Category:</label>
+        <input type="text" id="task-category-edit" name="task-category-edit"><br><br>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
   </body>
   <script src="./renderer.js"></script>
 </html>
