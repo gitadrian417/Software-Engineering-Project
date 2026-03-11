@@ -8,6 +8,10 @@ function appendTask(event, name, category) {
   console.log(tasks);
 }
 
+function removeTask(event, name) {
+
+}
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -24,6 +28,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   ipcMain.handle('ping', () => 'pong');
   ipcMain.on('add-task', appendTask);
+  ipcMain.on('remove-task', removeTask);
   createWindow();
 
   app.on('activate', () => {

@@ -8,5 +8,6 @@ contextBridge.exposeInMainWorld('versions', {
 })
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  appendTask: (name, category) => ipcRenderer.send('add-task', name, category)
+  addTask: (name, category) => ipcRenderer.send('add-task', name, category),
+  removeTask: (name) => ipcRenderer.send('remove-task', name)
 })
