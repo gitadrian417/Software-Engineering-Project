@@ -9,5 +9,12 @@ contextBridge.exposeInMainWorld('versions', {
 
 contextBridge.exposeInMainWorld('electronAPI', {
   addTask: (name, category) => ipcRenderer.send('add-task', name, category),
-  removeTask: (name) => ipcRenderer.send('remove-task', name)
+  removeTask: (name) => ipcRenderer.send('remove-task', name),
+  addToCal: () => ipcRenderer.invoke('addToCal')
+})
+
+//for changing between calendar and list view
+contextBridge.exposeInMainWorld('windowView', {
+  toggleCal: () => ipcRenderer.invoke('toggleCal'),
+  toggleList: () => ipcRenderer.invoke('toggleList')
 })
