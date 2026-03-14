@@ -2,14 +2,15 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron/main')
 const path = require('node:path')
 
 function appendTask(event, name, category) {
-  //console.log('name: ' + name);
-  //console.log('category: ' + category);
-  tasks.push(new Task(name, category, 0, 0));
-  //console.log(tasks);
+  tasks.push(new Task(name, category, 1, 0));
 }
 
 function removeTask(event, name) {
 
+}
+
+function addToCal(event) {
+  return tasks
 }
 
 const createWindow = () => {
@@ -23,12 +24,22 @@ const createWindow = () => {
 
   win.loadFile('index.html');
   //win.webContents.openDevTools()
+
+  //change window between calendar and list
+  ipcMain.handle('toggleCal', () => {
+    win.loadFile('calendar.html')
+
+  })
+  ipcMain.handle('toggleList', () => {
+    win.loadFile('index.html');
+  })
 }
 
 app.whenReady().then(() => {
   ipcMain.handle('ping', () => 'pong');
   ipcMain.on('add-task', appendTask);
   ipcMain.on('remove-task', removeTask);
+  ipcMain.handle('addToCal', addToCal)
   createWindow();
 
   app.on('activate', () => {
@@ -60,4 +71,3 @@ class Task {
 }
 
 tasks = []
-
