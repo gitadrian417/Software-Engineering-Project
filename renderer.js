@@ -72,11 +72,6 @@ function unhideElement(element) {
   }
 }
 
-// Testing
-createTask("Assignment 1", "CSCE 3444");
-createTask("Assignment 2", "CSCE 4240");
-createTask("Assignment 3", "CSCE 4650");
-
 //for calendar view
 document.getElementById('toggle-Cal').addEventListener('click', async () => {
   await window.windowView.toggleCal()  
