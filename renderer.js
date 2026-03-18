@@ -1,13 +1,6 @@
 //const information = document.getElementById('info')
 //information.innerText = `This app is using Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), and Electron (v${versions.electron()})`
 
-const func = async () => {
-  const response = await window.versions.ping()
-  console.log(response) // prints out 'pong'
-}
-
-func()
-
 document.getElementById('add-new-task').addEventListener('click', () => {
   let form = document.getElementById('task-edit-form');
   if (form.hasAttribute('hidden')) {
@@ -19,15 +12,17 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
   event.preventDefault();
   const name = event.target.elements[0].value;
   const category = event.target.elements[1].value;
-  createTask(name, category);
+
+  const priority = parseInt(document.querySelector('input[name="task-priority-name"]:checked').value)
+  createTask(name, category, priority);
   event.target.setAttribute('hidden', 'hidden');
   event.target.reset();
 })
 
-function createTask(name, category) {
+function createTask(name, category, priority) {
 
   // Add task to backend
-  window.electronAPI.addTask(name, category);
+  window.electronAPI.addTask(name, category, priority);
 
   // Add task to HTML page
   const div1 = document.createElement("div");
