@@ -1,10 +1,15 @@
 body {
-    background-color: rgb(233, 232, 232);
+    background-color: darkslategray;
+    font-family: 'Verdana', sans-serif;
 }
 
 .calendar {
     width: 800px;
     margin: auto;
+    border: 10px solid rgb(38, 63, 63);
+    border-radius: 10px;
+    padding: 5%;
+    background-color: rgb(63, 97, 97);
 }
 
 .header {
@@ -12,6 +17,8 @@ body {
     justify-content: space-between;
     align-items: center;
     font-size: 26px;
+    color: azure;
+    text-shadow: 4px 4px 5px rgb(38, 63, 63);
 }
 
 #next {
@@ -20,6 +27,7 @@ body {
     font-size: 25px;
     font-style: bold;
     background-color: rgb(194, 223, 194);
+    text-shadow: 1px 1px 2px rgb(111, 111, 111);
 }
 
 #prev {
@@ -28,6 +36,7 @@ body {
     font-size: 25px;
     font-style: bold;
     background-color: rgb(194, 223, 194);
+    text-shadow: 1px 1px 2px rgb(111, 111, 111);
 }
 
 .weekdays, .days {
@@ -39,6 +48,8 @@ body {
     font-weight: bold;
     text-align: center;
     font-size: 20px;
+    color: azure;
+    text-shadow: 4px 4px 5px rgb(38, 63, 63);
 }
 
 .days > div {
@@ -64,13 +75,30 @@ body {
 
 .task {
     text-align: left;
-    border: 2px solid rgb(106, 12, 7);
-    background-color: rgb(212, 183, 180);
     font-size: 12px;
     max-height: 20%;
-    padding: 2px;
     display: block;
-    margin: 1px;
+}
+
+.task_low {
+    border: 2px solid rgb(135, 137, 9);
+    background-color: rgb(223, 222, 172);
+    margin: 3px;
+    padding: 1px;
+}
+
+.task_mid {
+    border: 2px solid rgb(155, 106, 8);
+    background-color: rgb(222, 192, 146);
+    margin: 3px;
+    padding: 1px;
+}
+
+.task_high {
+    border: 2px solid rgb(106, 12, 7);
+    background-color: rgb(212, 183, 180);
+    margin: 3px;
+    padding: 1px;
 }
 
 .p {
