@@ -11,21 +11,37 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Hello from Electron renderer!</title>
+    <title>List View</title>
   </head>
   <body>
-    <div class="swap-view" id="swap-view"></div>
-      <button id="toggle-Cal">Change to calendar view</button>
-      
-    <div class="tasks-card-view" id="tasks-card-view">
-      <button id="add-new-task">Add New Task</button>
-      <form id="task-edit-form" hidden>
-        <label for="task-name-edit">Task Name:</label>
-        <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
-        <label for="task-category-edit">Task Category:</label>
-        <input type="text" id="task-category-edit" name="task-category-edit"><br><br>
-        <input type="submit" value="Submit">
-      </form>
+    <div class="left-column" id="left-column">
+      <div class="swap-view" id="swap-view">
+        <button id="toggle-Cal">Change to calendar view</button>
+      </div>
+      <div class="task-add" id="task-add">
+        <button id="add-new-task">Add New Task</button>
+        <form id="task-edit-form" hidden>
+          <label for="task-name-edit" class="task-add-form-text">Task Name:</label>
+          <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
+          <label for="task-category-edit" class="task-add-form-text">Task Category:</label>
+          <input type="text" id="task-category-edit" name="task-category-edit"><br><br>
+
+          <label for="task-priority-edit" class='task-add-form-text'>Task Priority Level:</label><br>
+          <label class='task-add-form-text'>Low:</label>
+          <input type="radio" name="task-priority-name", value="0"><br>
+          <label class='task-add-form-text'>Medium:</label>
+          <input type="radio" name="task-priority-name", value="1"><br>
+          <label class='task-add-form-text'>High:</label>
+          <input type="radio" name="task-priority-name", value="2"><br><br>
+
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+    </div>
+    <div class="right-column" id="right-column">
+      <div class="tasks-card-view" id="tasks-card-view">
+        
+      </div>
     </div>
   </body>
   <script src="./renderer.js"></script>
