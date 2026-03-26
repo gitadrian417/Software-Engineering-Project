@@ -11,7 +11,7 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Hello from Electron renderer!</title>
+    <title>List View</title>
   </head>
   <body>
     <div class="left-column" id="left-column">
@@ -25,6 +25,15 @@
           <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
           <label for="task-category-edit" class="task-add-form-text">Task Category:</label>
           <input type="text" id="task-category-edit" name="task-category-edit"><br><br>
+
+          <label for="task-priority-edit" class='task-add-form-text'>Task Priority Level:</label><br>
+          <label class='task-add-form-text'>Low:</label>
+          <input type="radio" name="task-priority-name", value="0"><br>
+          <label class='task-add-form-text'>Medium:</label>
+          <input type="radio" name="task-priority-name", value="1"><br>
+          <label class='task-add-form-text'>High:</label>
+          <input type="radio" name="task-priority-name", value="2"><br><br>
+
           <input type="submit" value="Submit">
         </form>
       </div>

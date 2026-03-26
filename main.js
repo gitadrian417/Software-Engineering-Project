@@ -1,8 +1,8 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron/main')
 const path = require('node:path')
 
-function appendTask(event, name, category) {
-  tasks.push(new Task(name, category, 1, 0));
+function appendTask(event, name, category, priority) {
+  tasks.push(new Task(name, category, priority, 1));
 }
 
 function removeTask(event, name) {
@@ -62,12 +62,12 @@ app.on('window-all-closed', () => {
 // Priority: integer (1-3)
 
 class Task {
-  constructor(name, category, dueDate, priority) {
+  constructor(name, category, priority, dueDate) {
     this.name = name
     this.category = category
-    this.dueDate = dueDate
     this.priority = priority
+    this.dueDate = dueDate
   }
 }
 
-tasks = []
+let tasks = []

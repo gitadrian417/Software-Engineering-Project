@@ -7,6 +7,7 @@ let currentDate = new Date()
 let tasks = [];
 
 function renderCalendar() {
+    console.log(tasks.length)
     dayBox.innerHTML = "";
 
     //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
@@ -36,25 +37,50 @@ function renderCalendar() {
     //add boxes to calendar
     for (let i = 1; i <= endDay; i++) {
         let box = document.createElement("div")
-
+        
         //add day number to box
         let dateNum = document.createElement("span")
         dateNum.className = "dateNum"
         dateNum.innerText = i
         box.appendChild(dateNum);
-
+        
         //add tasks to box if its due on that day 
         //(currently applies to every month, the actual task class needs a better date structure)
         tasks.forEach(currentTask => {
             if (currentTask.dueDate == i) {
                 let taskDiv = document.createElement("div");
                 taskDiv.className = "task"
-                taskDiv.innerText = currentTask.name
+
+                //colors task based on priority
+                switch(currentTask.priority) {
+                    case 0: {
+                        let priority = document.createElement("div")
+                        priority.className = "task_low"
+                        priority.innerText = currentTask.name
+                        taskDiv.appendChild(priority)
+                        break;
+                    }
+                    case 1: {
+                        let priority = document.createElement("div")
+                        priority.className = "task_mid"
+                        priority.innerText = currentTask.name
+                        taskDiv.appendChild(priority)
+                        break;
+                    }
+                    case 2: {
+                        let priority = document.createElement("div")
+                        priority.className = "task_high"
+                        priority.innerText = currentTask.name
+                        taskDiv.appendChild(priority)
+                        break;
+                    }
+                }
                 box.appendChild(taskDiv);
             }
         })
         dayBox.appendChild(box);
     }
+
 }
 
 //increments/decrements current month by 1 if next/prev is clicked
@@ -74,7 +100,8 @@ document.getElementById('toggle-List').addEventListener('click', async () => {
 
 //for loading the intial calendar
 const getTasks = async () => {
-    tasks = await window.electronAPI.addToCal()
+    tasks = await window.electronAPI.addToCal();
     renderCalendar()
 }
+
 getTasks()
