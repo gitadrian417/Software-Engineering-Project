@@ -68,7 +68,7 @@ function switchViews() {
 }
 
 function renderCalendar() {
-    console.log(tasks.length)
+    //console.log(tasks.length);
     dayBox.innerHTML = "";
 
     //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
@@ -82,64 +82,66 @@ function renderCalendar() {
     //add previous month boxes if applicable
     for (let i = startDay; i > 0; i--) {
         let pastDay = new Date(year, month, 0).getDate();
-        let number = pastDay - i + 1
+        let number = pastDay - i + 1;
 
         let emptyBox = document.createElement("div");
-        dayBox.appendChild(emptyBox)
+        emptyBox.className = 'pastDayBox'; // Color the past month's day boxes to be darker.
+        dayBox.appendChild(emptyBox);
 
         //add day number to box
-        let dateNum = document.createElement("span")
-        dateNum.className = "pastDateNum"
-        dateNum.innerText = number
-        emptyBox.appendChild(dateNum)
+        let dateNum = document.createElement("span");
+        dateNum.className = "pastDateNum";
+        dateNum.innerText = number;
+        emptyBox.appendChild(dateNum);
         
     }
 
     //add boxes to calendar
     for (let i = 1; i <= endDay; i++) {
-        let box = document.createElement("div")
-        
-        //add day number to box
-        let dateNum = document.createElement("span")
-        dateNum.className = "dateNum"
-        dateNum.innerText = i
-        box.appendChild(dateNum);
-        
-        //add tasks to box if its due on that day 
-        //(currently applies to every month, the actual task class needs a better date structure)
-        tasks.forEach(currentTask => {
-            if (currentTask.dueDate == i) {
-                let taskDiv = document.createElement("div");
-                taskDiv.className = "task"
+      let box = document.createElement("div");
+      box.className = 'dayBox';
 
-                //colors task based on priority
-                switch(currentTask.priority) {
-                    case 0: {
-                        let priority = document.createElement("div")
-                        priority.className = "task_low"
-                        priority.innerText = currentTask.name
-                        taskDiv.appendChild(priority)
-                        break;
-                    }
-                    case 1: {
-                        let priority = document.createElement("div")
-                        priority.className = "task_mid"
-                        priority.innerText = currentTask.name
-                        taskDiv.appendChild(priority)
-                        break;
-                    }
-                    case 2: {
-                        let priority = document.createElement("div")
-                        priority.className = "task_high"
-                        priority.innerText = currentTask.name
-                        taskDiv.appendChild(priority)
-                        break;
-                    }
-                }
-                box.appendChild(taskDiv);
+      //add day number to box
+      let dateNum = document.createElement("span");
+      dateNum.className = "dateNum";
+      dateNum.innerText = i;
+      box.appendChild(dateNum);
+      
+      //add tasks to box if its due on that day 
+      //(currently applies to every month, the actual task class needs a better date structure)
+      tasks.forEach(currentTask => {
+        if (currentTask.dueDate == i) {
+          let taskDiv = document.createElement("div");
+          taskDiv.className = "task";
+
+          //colors task based on priority
+          switch(currentTask.priority) {
+            case 0: {
+              let priority = document.createElement("div");
+              priority.className = "task_low";
+              priority.innerText = currentTask.name;
+              taskDiv.appendChild(priority);
+              break;
             }
-        })
-        dayBox.appendChild(box);
+            case 1: {
+              let priority = document.createElement("div");
+              priority.className = "task_mid";
+              priority.innerText = currentTask.name;
+              taskDiv.appendChild(priority)
+              break;
+            }
+            case 2: {
+              let priority = document.createElement("div");
+              priority.className = "task_high";
+              priority.innerText = currentTask.name;
+              taskDiv.appendChild(priority);
+              break;
+            }
+          }
+          box.appendChild(taskDiv);
+        }
+      });
+      dayBox.appendChild(box);
     }
 }
 
@@ -148,6 +150,7 @@ document.getElementById("next").addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar()
 })
+
 document.getElementById("prev").addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar()
@@ -173,7 +176,6 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
 
 //for calendar view
 document.getElementById('toggle-view').addEventListener('click', async () => {
-  //await window.windowView.toggleCal()  
   switchViews();
   getTasks();
 })

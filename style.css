@@ -78,9 +78,18 @@ body {
     text-shadow: 4px 4px 5px rgb(38, 63, 63);
 }
 
-.days > div {
+.dayBox {
     border: 2px solid rgb(51, 146, 51);
     background-color: rgb(194, 223, 194);
+    min-height: 80px;
+    max-height: 120px;
+    overflow-y: auto;
+    margin: 1px;
+}
+
+.pastDayBox {
+    border: 2px solid rgb(27, 56, 27);
+    background-color: rgb(102, 116, 102);
     min-height: 80px;
     max-height: 120px;
     overflow-y: auto;
