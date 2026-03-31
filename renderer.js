@@ -175,8 +175,7 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
 document.getElementById('toggle-view').addEventListener('click', async () => {
   //await window.windowView.toggleCal()  
   switchViews();
-  tasks = await window.electronAPI.addToCal();
-  renderCalender();
+  getTasks();
 })
 
 //for loading the intial calendar
