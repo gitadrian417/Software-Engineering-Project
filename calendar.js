@@ -80,7 +80,6 @@ function renderCalendar() {
         })
         dayBox.appendChild(box);
     }
-
 }
 
 //increments/decrements current month by 1 if next/prev is clicked

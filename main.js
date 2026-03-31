@@ -10,7 +10,7 @@ function removeTask(event, name) {
 }
 
 function addToCal(event) {
-  return tasks
+  return tasks;
 }
 
 const createWindow = () => {
@@ -27,8 +27,7 @@ const createWindow = () => {
 
   //change window between calendar and list
   ipcMain.handle('toggleCal', () => {
-    win.loadFile('calendar.html')
-
+    win.loadFile('calendar.html');
   })
   ipcMain.handle('toggleList', () => {
     win.loadFile('index.html');

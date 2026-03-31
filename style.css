@@ -28,3 +28,115 @@ body {
 .task-add-form-text {
     color: azure;
 }
+
+.calendar {
+    width: 800px;
+    margin: auto;
+    border: 10px solid rgb(38, 63, 63);
+    border-radius: 10px;
+    padding: 5%;
+    background-color: rgb(63, 97, 97);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 26px;
+    color: azure;
+    text-shadow: 4px 4px 5px rgb(38, 63, 63);
+}
+
+#next {
+    width: 10%;
+    height: 50px;
+    font-size: 25px;
+    font-style: bold;
+    background-color: rgb(194, 223, 194);
+    text-shadow: 1px 1px 2px rgb(111, 111, 111);
+}
+
+#prev {
+    width: 10%;
+    height: 50px;
+    font-size: 25px;
+    font-style: bold;
+    background-color: rgb(194, 223, 194);
+    text-shadow: 1px 1px 2px rgb(111, 111, 111);
+}
+
+.weekdays, .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.weekdays div {
+    font-weight: bold;
+    text-align: center;
+    font-size: 20px;
+    color: azure;
+    text-shadow: 4px 4px 5px rgb(38, 63, 63);
+}
+
+.days > div {
+    border: 2px solid rgb(51, 146, 51);
+    background-color: rgb(194, 223, 194);
+    min-height: 80px;
+    max-height: 120px;
+    overflow-y: auto;
+    margin: 1px;
+}
+
+.dateNum {
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 4px;
+}
+
+.pastDateNum {
+    font-weight: bold;
+    font-size: 15px;
+    margin-right: 4px;
+}
+
+.task {
+    text-align: left;
+    font-size: 12px;
+    max-height: 20%;
+    display: block;
+}
+
+.task_low {
+    border: 2px solid rgb(135, 137, 9);
+    background-color: rgb(223, 222, 172);
+    margin: 3px;
+    padding: 1px;
+}
+
+.task_mid {
+    border: 2px solid rgb(155, 106, 8);
+    background-color: rgb(222, 192, 146);
+    margin: 3px;
+    padding: 1px;
+}
+
+.task_high {
+    border: 2px solid rgb(106, 12, 7);
+    background-color: rgb(212, 183, 180);
+    margin: 3px;
+    padding: 1px;
+}
+
+.p {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#toggle-List {
+    width: 150px;
+    height: 50px;
+    font-style: bold;
+    background-color: rgb(194, 223, 194);
+}
