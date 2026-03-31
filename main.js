@@ -1,16 +1,32 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron/main')
 const path = require('node:path')
 
-function appendTask(event, name, category, priority) {
-  tasks.push(new Task(name, category, priority, 1));
+function appendTask(event, name, category, dueDate) {
+  tasks.push(new Task(name, category, dueDate, 2));
 }
 
 function removeTask(event, name) {
 
 }
 
+function editTask(taskName, newName, newCategory, newDueDate, newPriority) {
+
+  // Searches for taskName in task array
+  const task = tasks.find(t => t.name === taskName)
+  if(!task)
+    return;
+
+  task.name = newName;
+  task.category = newCategory;
+  task.dueDate = newDueDate;
+  task.priority = newPriority;
+
+  console.log("Editing:", taskName);
+  console.log("Before:", tasks);
+}
+
 function addToCal(event) {
-  return tasks;
+  return tasks
 }
 
 const createWindow = () => {
@@ -27,7 +43,8 @@ const createWindow = () => {
 
   //change window between calendar and list
   ipcMain.handle('toggleCal', () => {
-    win.loadFile('calendar.html');
+    win.loadFile('calendar.html')
+
   })
   ipcMain.handle('toggleList', () => {
     win.loadFile('index.html');
@@ -61,12 +78,12 @@ app.on('window-all-closed', () => {
 // Priority: integer (1-3)
 
 class Task {
-  constructor(name, category, priority, dueDate) {
+  constructor(name, category, dueDate, priority) {
     this.name = name
     this.category = category
-    this.priority = priority
     this.dueDate = dueDate
+    this.priority = priority
   }
 }
 
-let tasks = []
+tasks = []

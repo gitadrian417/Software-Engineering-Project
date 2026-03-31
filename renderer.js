@@ -1,16 +1,67 @@
 //const information = document.getElementById('info')
 //information.innerText = `This app is using Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), and Electron (v${versions.electron()})`
 
-const h2 = document.getElementById("h2");
-const dayBox = document.getElementById("dayBox");
+const func = async () => {
+  const response = await window.versions.ping()
+  console.log(response) // prints out 'pong'
+}
 
-let currentDate = new Date();
-let tasks = [];
+func()
 
-function createTask(name, category, priority) {
+document.getElementById('add-new-task').addEventListener('click', () => {
+  let form = document.getElementById('task-create-form');
+  if (form.hasAttribute('hidden')) {
+    form.removeAttribute('hidden');
+  }
+})
+
+document.getElementById('task-create-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const name = event.target.elements[0].value;
+  const category = event.target.elements[1].value;
+  const dueDate = event.target.elements[2].value;
+  const priority = event.target.elements[3].value;
+
+  createTask(name, category, dueDate, priority);
+  event.target.setAttribute('hidden', 'hidden');
+  event.target.reset();
+})
+
+document.getElementById('task-edit-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const name = event.target.elements[0].value;
+  const category = event.target.elements[1].value;
+  const dueDate = event.target.elements[2].value;
+  const priority = event.target.elements[3].value;
+
+  // Update dataset for next edit
+  const taskDiv = document.getElementById(event.target.dataset.taskId);
+  taskDiv.querySelector('h2').innerText = name;
+  taskDiv.querySelector('p').innerText = category;
+  taskDiv.dataset.name = name;
+  taskDiv.dataset.category = category;
+  taskDiv.dataset.dueDate = dueDate;
+  taskDiv.dataset.priority = priority;
+
+  console.log("After:", tasks);
+  const oName = event.target.dataset.origName;
+  try {
+    window.electronAPI.editTask(oName, name, category, dueDate, priority);
+  } catch (e) {
+  console.error("Error calling editTask:", e);
+  }
+
+  event.target.dataset.origName = name;
+
+  event.target.setAttribute('hidden', 'hidden');
+  event.target.reset();
+})
+
+function createTask(name, category, dueDate, priority) {
 
   // Add task to backend
-  window.electronAPI.addTask(name, category, priority);
+  window.electronAPI.addTask(name, category, dueDate);
 
   // Add task to HTML page
   const div1 = document.createElement("div");
@@ -25,11 +76,32 @@ function createTask(name, category, priority) {
   p.className = 'task-card-text';
   h2.innerText = name;
   p.innerText = category;
+
+  div1.dataset.name = name;
+  div1.dataset.category = category;
+  div1.dataset.dueDate = dueDate;
+  div1.dataset.priority = priority;
+
   editButton.innerText = "Edit";
   delButton.innerText = "Delete";
 
   editButton.addEventListener('click', () => {
+    const form = document.getElementById('task-edit-form')
 
+    if (form.hasAttribute('hidden')) {
+      form.removeAttribute('hidden');
+    }
+
+    // Prefills form inputs with task's current data
+    form.elements[0].value = div1.dataset.name || name;
+    form.elements[1].value = div1.dataset.category || category;
+    form.elements[2].value = div1.dataset.dueDate || dueDate;
+    form.elements[3].value = div1.dataset.priority || priority;
+
+
+    // Saves task ID and task name for reference in submit button
+    form.dataset.taskId = div1.id;
+    form.dataset.origName = div1.dataset.name;
   });
 
   delButton.addEventListener('click', () => {
@@ -55,133 +127,12 @@ function unhideElement(element) {
   }
 }
 
-function switchViews() {
-  cardView = document.getElementById('tasks-card-view');
-  calendarView = document.getElementById('calendar-view');
-  if (cardView.hasAttribute('hidden')) {
-    cardView.removeAttribute('hidden');
-    hideElement(calendarView);
-  } else {
-    hideElement(cardView);
-    unhideElement(calendarView);
-  }
-}
-
-function renderCalendar() {
-    //console.log(tasks.length);
-    dayBox.innerHTML = "";
-
-    //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
-    let year = currentDate.getFullYear()
-    let month = currentDate.getMonth();
-    let startDay = new Date(year, month, 1).getDay()
-    let endDay = new Date(year, month + 1, 0).getDate()
-
-    h2.innerText = currentDate.toLocaleString("default", {month: "long"}) + " " + year;
-
-    //add previous month boxes if applicable
-    for (let i = startDay; i > 0; i--) {
-        let pastDay = new Date(year, month, 0).getDate();
-        let number = pastDay - i + 1;
-
-        let emptyBox = document.createElement("div");
-        emptyBox.className = 'pastDayBox'; // Color the past month's day boxes to be darker.
-        dayBox.appendChild(emptyBox);
-
-        //add day number to box
-        let dateNum = document.createElement("span");
-        dateNum.className = "pastDateNum";
-        dateNum.innerText = number;
-        emptyBox.appendChild(dateNum);
-        
-    }
-
-    //add boxes to calendar
-    for (let i = 1; i <= endDay; i++) {
-      let box = document.createElement("div");
-      box.className = 'dayBox';
-
-      //add day number to box
-      let dateNum = document.createElement("span");
-      dateNum.className = "dateNum";
-      dateNum.innerText = i;
-      box.appendChild(dateNum);
-      
-      //add tasks to box if its due on that day 
-      //(currently applies to every month, the actual task class needs a better date structure)
-      tasks.forEach(currentTask => {
-        if (currentTask.dueDate == i) {
-          let taskDiv = document.createElement("div");
-          taskDiv.className = "task";
-
-          //colors task based on priority
-          switch(currentTask.priority) {
-            case 0: {
-              let priority = document.createElement("div");
-              priority.className = "task_low";
-              priority.innerText = currentTask.name;
-              taskDiv.appendChild(priority);
-              break;
-            }
-            case 1: {
-              let priority = document.createElement("div");
-              priority.className = "task_mid";
-              priority.innerText = currentTask.name;
-              taskDiv.appendChild(priority)
-              break;
-            }
-            case 2: {
-              let priority = document.createElement("div");
-              priority.className = "task_high";
-              priority.innerText = currentTask.name;
-              taskDiv.appendChild(priority);
-              break;
-            }
-          }
-          box.appendChild(taskDiv);
-        }
-      });
-      dayBox.appendChild(box);
-    }
-}
-
-//increments/decrements current month by 1 if next/prev is clicked
-document.getElementById("next").addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar()
-})
-
-document.getElementById("prev").addEventListener('click', () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar()
-})
-
-document.getElementById('add-new-task').addEventListener('click', () => {
-  let form = document.getElementById('task-edit-form');
-  if (form.hasAttribute('hidden')) {
-    form.removeAttribute('hidden');
-  }
-})
-
-document.getElementById('task-edit-form').addEventListener('submit', (event) => {
-  event.preventDefault();
-  const name = event.target.elements[0].value;
-  const category = event.target.elements[1].value;
-
-  const priority = parseInt(document.querySelector('input[name="task-priority-name"]:checked').value)
-  createTask(name, category, priority);
-  event.target.setAttribute('hidden', 'hidden');
-  event.target.reset();
-})
+// Testing
+createTask("Assignment 1", "CSCE 3444", '2026-03-17');
+createTask("Assignment 2", "CSCE 4240", '2026-04-17');
+createTask("Assignment 3", "CSCE 4650", '2026-06-07');
 
 //for calendar view
-document.getElementById('toggle-view').addEventListener('click', async () => {
-  switchViews();
-  getTasks();
+document.getElementById('toggle-Cal').addEventListener('click', async () => {
+  await window.windowView.toggleCal()  
 })
-
-//for loading the intial calendar
-const getTasks = async () => {
-  tasks = await window.electronAPI.addToCal();
-  renderCalendar();
-}

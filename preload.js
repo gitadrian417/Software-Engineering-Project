@@ -8,9 +8,9 @@ contextBridge.exposeInMainWorld('versions', {
 })
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  addTask: (name, category, priority) => ipcRenderer.send('add-task', name, category, priority),
+  addTask: (name, category, dueDate) => ipcRenderer.send('add-task', name, category, dueDate),
   removeTask: (name) => ipcRenderer.send('remove-task', name),
-  addToCal: () => ipcRenderer.invoke('addToCal'),
+  addToCal: () => ipcRenderer.invoke('addToCal')
 })
 
 //for changing between calendar and list view
