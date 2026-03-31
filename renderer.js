@@ -72,10 +72,10 @@ function renderCalendar() {
     dayBox.innerHTML = "";
 
     //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
-    let year = currentDate.getFullYear()
+    let year = currentDate.getFullYear();
     let month = currentDate.getMonth();
-    let startDay = new Date(year, month, 1).getDay()
-    let endDay = new Date(year, month + 1, 0).getDate()
+    let startDay = new Date(year, month, 1).getDay();
+    let endDay = new Date(year, month + 1, 0).getDate();
 
     h2.innerText = currentDate.toLocaleString("default", {month: "long"}) + " " + year;
 
@@ -100,6 +100,14 @@ function renderCalendar() {
     for (let i = 1; i <= endDay; i++) {
       let box = document.createElement("div");
       box.className = 'dayBox';
+      box.addEventListener('mouseenter', (event) => {
+        event.target.style.backgroundColor = "rgb(106, 155, 106)";
+        //event.target.style.backgroundColor = "purple";
+      });
+      box.addEventListener('mouseleave', (event) => {
+        event.target.style.backgroundColor = "rgb(194, 223, 194)";
+        //event.target.style.backgroundColor = "orange";
+      });
 
       //add day number to box
       let dateNum = document.createElement("span");
@@ -148,12 +156,12 @@ function renderCalendar() {
 //increments/decrements current month by 1 if next/prev is clicked
 document.getElementById("next").addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar()
+    renderCalendar();
 })
 
 document.getElementById("prev").addEventListener('click', () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar()
+    renderCalendar();
 })
 
 document.getElementById('add-new-task').addEventListener('click', () => {
