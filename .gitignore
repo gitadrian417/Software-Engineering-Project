@@ -1,3 +1,6 @@
+# Project Dependent Excludes
+tasks.txt
+
 # Logs
 logs
 *.log

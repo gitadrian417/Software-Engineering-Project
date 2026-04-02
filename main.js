@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron/main');
+const fs = require('fs');
 const path = require('node:path');
 
 // TASK FIELDS
@@ -40,6 +41,25 @@ function addToCal(event) {
   return tasks;
 }
 
+function writeTasksToFile(tasks) {
+  const contents = []
+  for (const task of tasks) {
+    contents.push(task.name);
+    contents.push(task.category);
+    contents.push(task.priority);
+    contents.push(task.dueDate);
+    contents.push("\n");
+  }
+  const result = contents.join(" ");
+  fs.writeFile("tasks.txt", result, (err) => {
+    if (err) {
+      console.error('Error writing file: ', err);
+    } else {
+      console.log('File written successfully.');
+    }
+  });
+}
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
@@ -78,6 +98,7 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
+  writeTasksToFile(tasks);
   if (process.platform !== 'darwin') {
     app.quit();
   }
