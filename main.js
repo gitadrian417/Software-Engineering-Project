@@ -1,8 +1,35 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron/main')
-const path = require('node:path')
+const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron/main');
+const path = require('node:path');
+
+// TASK FIELDS
+// Name: string
+// Category: string
+// Due Date: Date object
+// Priority: integer (1-3)
+
+class Task {
+  constructor(name, category, priority, dueDate) {
+    this.name = name
+    this.category = category
+    this.priority = priority
+    this.dueDate = dueDate
+  }
+}
+
+let tasks = []
+
+function taskReminderNotif(task) {
+  const notification = new Notification({
+    title: 'Upcoming Tasks',
+    body: `${task.name} | ${task.category}`
+  });
+  notification.show();
+}
 
 function appendTask(event, name, category, priority) {
-  tasks.push(new Task(name, category, priority, 1));
+  task = new Task(name, category, priority, 1);
+  tasks.push(task);
+  taskReminderNotif(task);
 }
 
 function removeTask(event, name) {
@@ -53,20 +80,3 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 })
-
-// TASK FIELDS
-// Name: string
-// Category: string
-// Due Date: Date object
-// Priority: integer (1-3)
-
-class Task {
-  constructor(name, category, priority, dueDate) {
-    this.name = name
-    this.category = category
-    this.priority = priority
-    this.dueDate = dueDate
-  }
-}
-
-let tasks = []
