@@ -33,8 +33,19 @@ function appendTask(event, name, category, priority) {
   taskReminderNotif(task);
 }
 
+//function to remove tasks, iterates through the tasks array and increments index
+//once it finds the name of the task, it removes it at index
+let index = 0;
 function removeTask(event, name) {
-
+  tasks.forEach(currentTask => {
+    if (currentTask.name == name) {
+      tasks.splice(index, 1)
+    }
+    else {
+      index += 1;
+    }
+  })
+  index = 0
 }
 
 function addToCal(event) {
