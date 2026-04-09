@@ -54,6 +54,8 @@ body {
     font-style: bold;
     background-color: rgb(194, 223, 194);
     text-shadow: 1px 1px 2px rgb(111, 111, 111);
+    border-radius: 100px;
+    border: 3px solid rgb(38, 63, 63);;
 }
 
 #prev {
@@ -63,6 +65,8 @@ body {
     font-style: bold;
     background-color: rgb(194, 223, 194);
     text-shadow: 1px 1px 2px rgb(111, 111, 111);
+    border-radius: 100px;
+    border: 3px solid rgb(38, 63, 63);;
 }
 
 .weekdays, .days {
@@ -81,8 +85,8 @@ body {
 .dayBox {
     border: 2px solid rgb(51, 146, 51);
     background-color: rgb(194, 223, 194);
-    min-height: 80px;
-    max-height: 120px;
+    min-height: 90px;
+    max-height: 90px;
     overflow-y: auto;
     margin: 1px;
 }
@@ -143,9 +147,52 @@ body {
     align-items: center;
 }
 
-#toggle-List {
+#toggle-view {
     width: 150px;
     height: 50px;
+    font-size: large;
     font-style: bold;
+    text-shadow: 0.5px 0.5px 1px rgb(111, 111, 111);
+    background-color: rgb(194, 223, 194);
+    border-radius: 100px;
+    border: 5px solid rgb(38, 63, 63);
+}
+#add-new-task {
+    width: 150px;
+    height: 50px;
+    font-size: large;
+    font-style: bold;
+    text-shadow: 0.5px 0.5px 1px rgb(111, 111, 111);
+    background-color: rgb(194, 223, 194);
+    border-radius: 100px;
+    border: 5px solid rgb(38, 63, 63);
+}
+
+#submit-button {
+    width: 150px;
+    height: 50px;
+    font-size: large;
+    font-style: bold;
+    text-shadow: 0.5px 0.5px 1px rgb(111, 111, 111);
+    background-color: rgb(194, 223, 194);
+    border-radius: 100px;
+    border: 5px solid rgb(38, 63, 63);
+}
+
+#task-edit-form {
+    min-width: 55%;
+    max-width: 56%;
+    overflow-x: auto;
+    border: 10px solid rgb(38, 63, 63);
+    border-radius: 10px;
+    padding: 5%;
+    background-color: rgb(63, 97, 97);
+}
+
+#task-name-edit {
+    background-color: rgb(194, 223, 194);
+}
+
+#task-category-edit {
     background-color: rgb(194, 223, 194);
 }
