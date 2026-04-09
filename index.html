@@ -22,25 +22,34 @@
         <button id="add-new-task">Add New Task</button>
         <form id="task-edit-form" hidden>
           <label for="task-name-edit" class="task-add-form-text">Task Name:</label>
+          <br>
           <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
           <label for="task-category-edit" class="task-add-form-text">Task Category:</label>
+          <br>
           <input type="text" id="task-category-edit" name="task-category-edit"><br><br>
-
           <label for="task-priority-edit" class='task-add-form-text'>Task Priority Level:</label><br>
-          <label class='task-add-form-text'>Low:</label>
-          <input type="radio" name="task-priority-name", value="0"><br>
-          <label class='task-add-form-text'>Medium:</label>
-          <input type="radio" name="task-priority-name", value="1"><br>
-          <label class='task-add-form-text'>High:</label>
-          <input type="radio" name="task-priority-name", value="2"><br><br>
-
-          <input type="submit" value="Submit">
+          <input type="radio" name="task-priority-edit", value="0">
+          <label class='task-add-form-text'> -> Low</label> 
+          <br>
+          <input type="radio" name="task-priority-edit", value="1">
+          <label class='task-add-form-text'> -> Medium</label>
+          <br>
+          <input type="radio" name="task-priority-edit", value="2">
+          <label class='task-add-form-text'> -> High</label>
+          <br>
+          <br>
+          <label class="task-add-form-text">Task Due Date:</label>
+          <br>
+          <label class="task-add-form-text"></label>
+          <input type="date" name="task-date-edit" id="task-date"></input>
+          <br>
+          <br>
+          <input type="submit" value="Submit" id="submit-button">
         </form>
       </div>
     </div>
     <div class="right-column" id="right-column">
       <div class="tasks-card-view" id="tasks-card-view">
-        
       </div>
       <div class="calendar" id="calendar-view" hidden>
         <div class="header">
@@ -58,8 +67,9 @@
           <div>Sat</div>
         </div>
         <div id="dayBox" class="days">
-            
         </div>
+      </div>
+    </div>
       </div>
     </div>
   </body>
