@@ -87,10 +87,10 @@ function loadTasksFromFile() {
     const priority = parseInt(entries[2]);
     const date = parseInt(entries[3]);
 
-    console.log(name);
-    console.log(category);
-    console.log(priority);
-    console.log(date);
+    //console.log(name);
+    //console.log(category);
+    //console.log(priority);
+    //console.log(date);
 
     const task = new Task(name, category, priority, date);
     tasks.push(task);
