@@ -11,38 +11,77 @@
       http-equiv="X-Content-Security-Policy"
       content="default-src 'self'; script-src 'self'"
     />
-    <title>Assignment Tracker</title>
+    <title>Task Tracker</title>
   </head>
   <body>
-    <div class="swap-view" id="swap-view"></div>
-      <button id="toggle-Cal">Change to calendar view</button>
-      
-    <div class="tasks-card-view" id="tasks-card-view">
-      <!-- Adding Task -->
-      <button id="add-new-task">Add New Task</button>
-      <form id="task-create-form" hidden>
-        <label for="task-name-edit">Task Name:</label>
-        <input type="text" id="task-name-create" name="task-name-create"><br><br>
-        <label for="task-class-edit">Task Class:</label>
-        <input type="text" id="task-class-create" name="task-class-create"><br><br>
-        <label for="task-duedate-edit">Task Due Date:</label>
-        <input type="text" id="task-duedate-create" name="task-duedate-create"><br><br>
-        <label for="task-priority-create">Task Priority:</label>
-        <input type="text" id="task-priority-create" name="task-priority-create"><br><br>
-        <input type="submit" value="Submit">
-      </form>
+    <div class="left-column" id="left-column">
+      <div class="swap-view" id="swap-view">
+        <button id="toggle-view">Change Views</button>
+      </div>
+      <div class="task-add" id="task-add">
+        <button id="add-new-task">Add New Task</button>
+        <form id="task-create-form" hidden>
+          <label for="task-name-create" class="task-add-form-text">Task Name:</label>
+          <input type="text" id="task-name-create" name="task-name-create"><br><br>
+          <label for="task-class-create" class="task-add-form-text">Task Class:</label>
+          <input type="text" id="task-class-create" name="task-class-create"><br><br>
+          <label for="task-duedate-edit" class="task-add-form-text">Task Due Date (YYYY-MM-DD):</label>
+          <input type="text" id="task-duedate-create" name="task-duedate-create"><br><br>
+
+          <label for="task-priority-create" class='task-add-form-text'>Task Priority Level:</label><br>
+          <label class='task-add-form-text'>Low:</label>
+          <input type="radio" name="task-priority-name", value="0"><br>
+          <label class='task-add-form-text'>Medium:</label>
+          <input type="radio" name="task-priority-name", value="1"><br>
+          <label class='task-add-form-text'>High:</label>
+          <input type="radio" name="task-priority-name", value="2"><br><br>
+
+          <input type="submit" value="Submit">
+        </form>
+      </div>
       <!-- Editing Task -->
       <form id="task-edit-form" hidden>
-        <label for="task-name-edit">Task Name:</label>
-        <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
-        <label for="task-class-edit">Task Class:</label>
-        <input type="text" id="task-class-edit" name="task-class-edit"><br><br>
-        <label for="task-duedate-edit">Task Due Date:</label>
-        <input type="text" id="task-duedate-edit" name="task-duedate-edit"><br><br>
-        <label for="task-priority-edit">Task Priority:</label>
-        <input type="text" id="task-priority-edit" name="task-priority-edit"><br><br>
-        <input type="submit" value="Submit">
+        <label for="task-name-edit" class="task-add-form-text">Task Name:</label>
+          <input type="text" id="task-name-edit" name="task-name-edit"><br><br>
+          <label for="task-class-edit" class="task-add-form-text">Task Class:</label>
+          <input type="text" id="task-class-edit" name="task-class-edit"><br><br>
+          <label for="task-duedate-edit" class="task-add-form-text">Task Due Date (YYYY-MM-DD):</label>
+          <input type="text" id="task-duedate-edit" name="task-duedate-edit"><br><br>
+
+          <label for="task-priority-edit" class='task-add-form-text'>Task Priority Level:</label><br>
+          <label class='task-add-form-text'>Low:</label>
+          <input type="radio" name="edit-priority-name", value="0"><br>
+          <label class='task-add-form-text'>Medium:</label>
+          <input type="radio" name="edit-priority-name", value="1"><br>
+          <label class='task-add-form-text'>High:</label>
+          <input type="radio" name="edit-priority-name", value="2"><br><br>
+
+          <input type="submit" value="Submit">
       </form>
+    </div>
+    <div class="right-column" id="right-column">
+      <div class="tasks-card-view" id="tasks-card-view">
+        
+      </div>
+      <div class="calendar" id="calendar-view" hidden>
+        <div class="header">
+          <button id="prev"><</button>
+          <h2 id="h2"></h2>
+          <button id="next">></button>
+        </div>
+        <div class="weekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>  
+          <div>Sat</div>
+        </div>
+        <div id="dayBox" class="days">
+            
+        </div>
+      </div>
     </div>
   </body>
   <script src="./renderer.js"></script>
