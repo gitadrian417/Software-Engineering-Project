@@ -71,6 +71,35 @@ function writeTasksToFile(tasks) {
   });
 }
 
+function loadTasksFromFile() {
+  if (!fs.existsSync("tasks.txt")) {
+    return;
+  }
+  const contents = fs.readFileSync("tasks.txt", "utf8");
+  const lines = contents.split("\n");
+  for (const line of lines) {
+    const entries = line.split(", ");
+    if (entries.length < 4)
+      continue;
+
+    const name = entries[0];
+    const category = entries[1];
+    const priority = parseInt(entries[2]);
+    const date = parseInt(entries[3]);
+
+    //console.log(name);
+    //console.log(category);
+    //console.log(priority);
+    //console.log(date);
+
+    const task = new Task(name, category, priority, date);
+    tasks.push(task);
+    //for (const entry of entries) {
+    //  console.log(entry);
+    //}
+  }
+}
+
 const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
