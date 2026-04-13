@@ -1,16 +1,12 @@
-//const information = document.getElementById('info')
-//information.innerText = `This app is using Chrome (v${versions.chrome()}), Node.js (v${versions.node()}), and Electron (v${versions.electron()})`
-
 const h2 = document.getElementById("h2");
 const dayBox = document.getElementById("dayBox");
 
 let currentDate = new Date();
 let tasks = [];
 
-function createTask(name, category, priority) {
-
+function createTask(name, category, priority, dueDate) {
   // Add task to backend
-  window.electronAPI.addTask(name, category, priority);
+  window.electronAPI.addTask(name, category, priority, dueDate);
 
   // Add task to HTML page
   const div1 = document.createElement("div");
@@ -68,7 +64,6 @@ function switchViews() {
 }
 
 function renderCalendar() {
-    //console.log(tasks.length);
     dayBox.innerHTML = "";
 
     //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
@@ -118,7 +113,16 @@ function renderCalendar() {
       //add tasks to box if its due on that day 
       //(currently applies to every month, the actual task class needs a better date structure)
       tasks.forEach(currentTask => {
-        if (currentTask.dueDate == i) {
+
+        const [yearStr, monthStr, dayStr] = currentTask.dueDate.split('-');
+        const taskYear = Number(yearStr);
+        const taskMonth = Number(monthStr) - 1;
+        const taskDay = Number(dayStr);
+
+        if( taskDay === i &&
+            taskMonth === month &&
+            taskYear === year
+        ){
           let taskDiv = document.createElement("div");
           taskDiv.className = "task";
 
@@ -169,6 +173,9 @@ document.getElementById('add-new-task').addEventListener('click', () => {
   if (form.hasAttribute('hidden')) {
     form.removeAttribute('hidden');
   }
+  else {
+    form.setAttribute('hidden', 'hidden')
+  }
 })
 
 document.getElementById('task-edit-form').addEventListener('submit', (event) => {
@@ -176,10 +183,16 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
   const name = event.target.elements[0].value;
   const category = event.target.elements[1].value;
 
-  const priority = parseInt(document.querySelector('input[name="task-priority-name"]:checked').value)
-  createTask(name, category, priority);
+  //priority
+  const priority = parseInt(document.querySelector('input[name="task-priority-edit"]:checked').value)
+  
+  //due date
+  const dueDate = document.getElementById('task-date').value
+
+  createTask(name, category, priority, dueDate);
   event.target.setAttribute('hidden', 'hidden');
   event.target.reset();
+  getTasks();
 })
 
 //for calendar view
