@@ -27,8 +27,8 @@ function taskReminderNotif(task) {
   notification.show();
 }
 
-function appendTask(event, name, category, priority) {
-  task = new Task(name, category, priority, 1);
+function appendTask(event, name, category, priority, dueDate) {
+  let task = new Task(name, category, priority, dueDate);
   tasks.push(task);
   taskReminderNotif(task);
 }
@@ -59,9 +59,9 @@ function writeTasksToFile(tasks) {
     contents.push(task.category);
     contents.push(task.priority);
     contents.push(task.dueDate);
+    contents.push("\n");
   }
-  let result = contents.join(", ");
-  result += "\n";
+  const result = contents.join(" ");
   fs.writeFile("tasks.txt", result, (err) => {
     if (err) {
       console.error('Error writing file: ', err);
@@ -69,35 +69,6 @@ function writeTasksToFile(tasks) {
       console.log('File written successfully.');
     }
   });
-}
-
-function loadTasksFromFile() {
-  if (!fs.existsSync("tasks.txt")) {
-    return;
-  }
-  const contents = fs.readFileSync("tasks.txt", "utf8");
-  const lines = contents.split("\n");
-  for (const line of lines) {
-    const entries = line.split(", ");
-    if (entries.length < 4)
-      continue;
-
-    const name = entries[0];
-    const category = entries[1];
-    const priority = parseInt(entries[2]);
-    const date = parseInt(entries[3]);
-
-    console.log(name);
-    console.log(category);
-    console.log(priority);
-    console.log(date);
-
-    const task = new Task(name, category, priority, date);
-    tasks.push(task);
-    //for (const entry of entries) {
-    //  console.log(entry);
-    //}
-  }
 }
 
 const createWindow = () => {
@@ -113,18 +84,9 @@ const createWindow = () => {
 
   win.loadFile('index.html');
   //win.webContents.openDevTools()
-
-  //change window between calendar and list
-  ipcMain.handle('toggleCal', () => {
-    win.loadFile('calendar.html');
-  })
-  ipcMain.handle('toggleList', () => {
-    win.loadFile('index.html');
-  })
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('ping', () => 'pong');
   ipcMain.on('add-task', appendTask);
   ipcMain.on('remove-task', removeTask);
   ipcMain.handle('addToCal', addToCal)
@@ -135,8 +97,6 @@ app.whenReady().then(() => {
       createWindow();
     }
   })
-
-  loadTasksFromFile();
 })
 
 app.on('window-all-closed', () => {
