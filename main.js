@@ -27,8 +27,8 @@ function taskReminderNotif(task) {
   notification.show();
 }
 
-function appendTask(event, name, category, priority) {
-  task = new Task(name, category, priority, 1);
+function appendTask(event, name, category, priority, dueDate) {
+  let task = new Task(name, category, priority, dueDate);
   tasks.push(task);
   taskReminderNotif(task);
 }
@@ -59,9 +59,9 @@ function writeTasksToFile(tasks) {
     contents.push(task.category);
     contents.push(task.priority);
     contents.push(task.dueDate);
+    contents.push("\n");
   }
-  let result = contents.join(", ");
-  result += "\n";
+  const result = contents.join(" ");
   fs.writeFile("tasks.txt", result, (err) => {
     if (err) {
       console.error('Error writing file: ', err);
@@ -113,18 +113,9 @@ const createWindow = () => {
 
   win.loadFile('index.html');
   //win.webContents.openDevTools()
-
-  //change window between calendar and list
-  ipcMain.handle('toggleCal', () => {
-    win.loadFile('calendar.html');
-  })
-  ipcMain.handle('toggleList', () => {
-    win.loadFile('index.html');
-  })
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('ping', () => 'pong');
   ipcMain.on('add-task', appendTask);
   ipcMain.on('remove-task', removeTask);
   ipcMain.handle('addToCal', addToCal)
@@ -135,8 +126,6 @@ app.whenReady().then(() => {
       createWindow();
     }
   })
-
-  loadTasksFromFile();
 })
 
 app.on('window-all-closed', () => {
