@@ -2,6 +2,10 @@ const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron/
 const fs = require('fs');
 const path = require('node:path');
 
+PRIORITY_LOW = 0;
+PRIORITY_MEDIUM = 1;
+PRIORITY_HIGH = 2;
+
 // TASK FIELDS
 // Name: string
 // Category: string
@@ -17,7 +21,7 @@ class Task {
   }
 }
 
-let tasks = []
+let tasks = [];
 
 function taskReminderNotif(task) {
   const notification = new Notification({
@@ -25,6 +29,29 @@ function taskReminderNotif(task) {
     body: `${task.name} | ${task.category}`
   });
   notification.show();
+}
+
+function generateTaskReminders() {
+  const agenda = [];
+
+  for (const task of tasks) {
+    const now = new Date();
+    const timeLeft = task.dueDate.getTime() - now.getTime();
+    const daysLeft = (((timeLeft / 1000) / 60) / 60) / 24;
+    if (task.priority == PRIORITY_HIGH) {
+      agenda.push(task);
+    }
+    if (task.priority == PRIORITY_MEDIUM && daysLeft <= 7) {
+      agenda.push(task);
+    }
+    if (task.priority = PRIORITY_LOW && daysLeft <= 1) {
+      agenda.push(task);
+    }
+  }
+
+  for (const task of agenda) {
+    taskReminderNotif(task);
+  }
 }
 
 function appendTask(event, name, category, priority, dueDate) {
@@ -52,14 +79,10 @@ function addToCal(event) {
   return tasks;
 }
 
-function buildDateString(date) {
-  return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
-}
-
 function writeTasksToFile(tasks) {
-  const contents = []
+  const contents = [];
   for (const task of tasks) {
-    const record = []
+    const record = [];
     record.push(task.name);
     record.push(task.category);
     record.push(task.priority);
@@ -127,6 +150,7 @@ app.whenReady().then(() => {
   ipcMain.handle('addToCal', addToCal)
   createWindow();
   loadTasksFromFile();
+  generateTaskReminders();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
