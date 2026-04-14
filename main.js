@@ -75,7 +75,7 @@ function removeTask(event, name) {
   index = 0
 }
 
-function addToCal(event) {
+function getTasks(event) {
   return tasks;
 }
 
@@ -147,7 +147,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
   ipcMain.on('add-task', appendTask);
   ipcMain.on('remove-task', removeTask);
-  ipcMain.handle('addToCal', addToCal)
+  ipcMain.handle('getTasks', getTasks);
   createWindow();
   loadTasksFromFile();
   generateTaskReminders();

@@ -201,6 +201,6 @@ document.getElementById('toggle-view').addEventListener('click', async () => {
 
 //for loading the intial calendar
 const getTasks = async () => {
-  tasks = await window.electronAPI.addToCal();
+  tasks = await window.electronAPI.getTasks();
   renderCalendar();
 }
