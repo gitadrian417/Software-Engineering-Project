@@ -114,10 +114,11 @@ function renderCalendar() {
       //(currently applies to every month, the actual task class needs a better date structure)
       tasks.forEach(currentTask => {
 
-        const [yearStr, monthStr, dayStr] = currentTask.dueDate.split('-');
-        const taskYear = Number(yearStr);
-        const taskMonth = Number(monthStr) - 1;
-        const taskDay = Number(dayStr);
+        ///const [yearStr, monthStr, dayStr] = currentTask.dueDate.split('-');
+        const taskYear = Number(currentTask.dueDate.getFullYear());
+        //const taskMonth = Number(currentTask.dueDate.getMonth()) - 1;
+        const taskMonth = Number(currentTask.dueDate.getMonth());
+        const taskDay = Number(currentTask.dueDate.getDate());
 
         if( taskDay === i &&
             taskMonth === month &&
@@ -180,16 +181,13 @@ document.getElementById('add-new-task').addEventListener('click', () => {
 
 document.getElementById('task-edit-form').addEventListener('submit', (event) => {
   event.preventDefault();
+
   const name = event.target.elements[0].value;
   const category = event.target.elements[1].value;
-
-  //priority
-  const priority = parseInt(document.querySelector('input[name="task-priority-edit"]:checked').value)
-  
-  //due date
-  const dueDate = document.getElementById('task-date').value
-
+  const priority = parseInt(document.querySelector('input[name="task-priority-edit"]:checked').value);
+  const dueDate = document.getElementById('task-date').valueAsDate;
   createTask(name, category, priority, dueDate);
+
   event.target.setAttribute('hidden', 'hidden');
   event.target.reset();
   getTasks();

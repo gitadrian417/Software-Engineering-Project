@@ -52,16 +52,22 @@ function addToCal(event) {
   return tasks;
 }
 
+function buildDateString(date) {
+  return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+}
+
 function writeTasksToFile(tasks) {
   const contents = []
   for (const task of tasks) {
-    contents.push(task.name);
-    contents.push(task.category);
-    contents.push(task.priority);
-    contents.push(task.dueDate);
-    contents.push("\n");
+    const record = []
+    record.push(task.name);
+    record.push(task.category);
+    record.push(task.priority);
+    record.push(task.dueDate.toISOString());
+    const result1 = record.join(",");
+    contents.push(result1);
   }
-  const result = contents.join(" ");
+  const result = contents.join("\n");
   fs.writeFile("tasks.txt", result, (err) => {
     if (err) {
       console.error('Error writing file: ', err);
@@ -78,14 +84,14 @@ function loadTasksFromFile() {
   const contents = fs.readFileSync("tasks.txt", "utf8");
   const lines = contents.split("\n");
   for (const line of lines) {
-    const entries = line.split(", ");
+    const entries = line.split(",");
     if (entries.length < 4)
       continue;
 
     const name = entries[0];
     const category = entries[1];
     const priority = parseInt(entries[2]);
-    const date = parseInt(entries[3]);
+    const date = new Date(entries[3]);
 
     //console.log(name);
     //console.log(category);
@@ -120,6 +126,7 @@ app.whenReady().then(() => {
   ipcMain.on('remove-task', removeTask);
   ipcMain.handle('addToCal', addToCal)
   createWindow();
+  loadTasksFromFile();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
