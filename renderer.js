@@ -245,8 +245,8 @@ document.getElementById('toggle-view').addEventListener('click', async () => {
   switchViews();
 })
 
-window.addEventListener('load', (event) => {
-  refreshTasks();
+window.addEventListener('load', async (event) => {
+  await refreshTasks();
   console.log(tasks.length);
   renderCardView();
 });

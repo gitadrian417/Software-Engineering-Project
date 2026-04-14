@@ -134,12 +134,12 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js')
     }
   });
-  loadTasksFromFile();
   win.loadFile('index.html');
-  win.webContents.openDevTools();
+  //win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
+  loadTasksFromFile();
   ipcMain.on('add-task', appendTask);
   ipcMain.on('remove-task', removeTask);
   ipcMain.handle('getTasks', getTasks);
