@@ -115,17 +115,12 @@ function loadTasksFromFile() {
     const category = entries[1];
     const priority = parseInt(entries[2]);
     const date = new Date(entries[3]);
-
+    const task = new Task(name, category, priority, date);
+    tasks.push(task);
     //console.log(name);
     //console.log(category);
     //console.log(priority);
     //console.log(date);
-
-    const task = new Task(name, category, priority, date);
-    tasks.push(task);
-    //for (const entry of entries) {
-    //  console.log(entry);
-    //}
   }
 }
 
@@ -138,10 +133,10 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
-  })
-
+  });
+  loadTasksFromFile();
   win.loadFile('index.html');
-  //win.webContents.openDevTools()
+  win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -149,7 +144,6 @@ app.whenReady().then(() => {
   ipcMain.on('remove-task', removeTask);
   ipcMain.handle('getTasks', getTasks);
   createWindow();
-  loadTasksFromFile();
   generateTaskReminders();
 
   app.on('activate', () => {

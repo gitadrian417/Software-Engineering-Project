@@ -4,6 +4,11 @@ const dayBox = document.getElementById("dayBox");
 let currentDate = new Date();
 let tasks = [];
 
+//for loading the intial calendar
+const refreshTasks = async () => {
+  tasks = await window.electronAPI.getTasks();
+}
+
 function createTask(name, category, priority, dueDate) {
   // Add task to backend
   window.electronAPI.addTask(name, category, priority, dueDate);
@@ -54,12 +59,55 @@ function unhideElement(element) {
 function switchViews() {
   cardView = document.getElementById('tasks-card-view');
   calendarView = document.getElementById('calendar-view');
-  if (cardView.hasAttribute('hidden')) {
+  if (cardView.hasAttribute('hidden')) { // Show card view
+    renderCardView();
     cardView.removeAttribute('hidden');
     hideElement(calendarView);
-  } else {
+  } else { // Show calendar view
     hideElement(cardView);
+    renderCalendar();
     unhideElement(calendarView);
+  }
+}
+
+function createTaskCard(task) {
+  // Add task to HTML page
+  const div1 = document.createElement("div");
+  const h2 = document.createElement("h2");
+  const p = document.createElement("p");
+  const editButton = document.createElement("button");
+  const delButton = document.createElement("button");
+
+  div1.id = "task-div-" + task.name;
+  div1.className = "task-card";
+  h2.className = 'task-card-text';
+  p.className = 'task-card-text';
+  h2.innerText = task.name;
+  p.innerText = task.category;
+  editButton.innerText = "Edit";
+  delButton.innerText = "Delete";
+
+  editButton.addEventListener('click', () => {
+
+  });
+
+  delButton.addEventListener('click', () => {
+    document.getElementById("task-div-"+task.name).remove();
+    window.electronAPI.removeTask(task.name);
+  });
+
+  div1.appendChild(h2);
+  div1.appendChild(p);
+  div1.appendChild(editButton);
+  div1.appendChild(delButton);
+  document.getElementById('tasks-card-view').appendChild(div1);
+  //console.log("Added new task to page.");
+}
+
+function renderCardView() {
+  document.getElementById('tasks-card-view').replaceChildren();
+  for (task of tasks) {
+    createTaskCard(task);
   }
 }
 
@@ -114,9 +162,7 @@ function renderCalendar() {
       //(currently applies to every month, the actual task class needs a better date structure)
       tasks.forEach(currentTask => {
 
-        ///const [yearStr, monthStr, dayStr] = currentTask.dueDate.split('-');
         const taskYear = Number(currentTask.dueDate.getFullYear());
-        //const taskMonth = Number(currentTask.dueDate.getMonth()) - 1;
         const taskMonth = Number(currentTask.dueDate.getMonth());
         const taskDay = Number(currentTask.dueDate.getDate());
 
@@ -190,17 +236,17 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
 
   event.target.setAttribute('hidden', 'hidden');
   event.target.reset();
-  getTasks();
+  refreshTasks();
 })
 
 //for calendar view
 document.getElementById('toggle-view').addEventListener('click', async () => {
+  refreshTasks();
   switchViews();
-  getTasks();
 })
 
-//for loading the intial calendar
-const getTasks = async () => {
-  tasks = await window.electronAPI.getTasks();
-  renderCalendar();
-}
+window.addEventListener('load', (event) => {
+  refreshTasks();
+  console.log(tasks.length);
+  renderCardView();
+});
