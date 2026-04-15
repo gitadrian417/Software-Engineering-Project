@@ -225,33 +225,47 @@ document.getElementById('add-new-task').addEventListener('click', () => {
 document.getElementById('task-edit-form').addEventListener('submit', (event) => {
   event.preventDefault();
 
+  const nameField = event.target.elements[0];
+  const categoryField = event.target.elements[1];
+  const priorityField = document.querySelector('input[name="task-priority-edit"]:checked');
+  const dueDateField = document.getElementById('task-date');
+
   var valid = true;
-
-  const radio = document.querySelector('input[name="task-priority-edit"]:checked');
   var priority = 1;
-  if (radio) {
-    priority = parseInt(radio.value);
+  if (priorityField) {
+    priority = parseInt(priorityField.value);
   } else {
-    console.log("Empty Priority!");
     valid = false;
   }
 
-  const name = event.target.elements[0].value.trim();
+  const name = nameField.value.trim();
   if (name.length == 0) {
-    console.log("Empty Name!");
     valid = false;
+    nameField.style.backgroundColor = "rgb(255, 127, 127)";
+    const warning = document.createElement("p");
+    warning.innerText = "Name required!";
+    warning.className = 'task-add-form-warning-text';
+    nameField.after(warning);
   }
 
-  const category = event.target.elements[1].value.trim();
+  const category = categoryField.value.trim();
   if (category.length == 0) {
-    console.log("Empty Category!");
     valid = false;
+    categoryField.style.backgroundColor = "rgb(255, 127, 127)";
+    const warning = document.createElement("p");
+    warning.innerText = "Category required!";
+    warning.className = 'task-add-form-warning-text';
+    categoryField.after(warning);
   }
 
-  const dueDate = document.getElementById('task-date').valueAsDate;
+  const dueDate = dueDateField.valueAsDate;
   if (!dueDate) {
-    console.log("Empty Due-Date!");
     valid = false;
+    dueDateField.style.backgroundColor = "rgb(255, 127, 127)";
+    const warning = document.createElement("p");
+    warning.innerText = "Due date required!";
+    warning.className = 'task-add-form-warning-text';
+    dueDateField.after(warning);
   }
 
   //console.log(Object.prototype.toString.call(name));

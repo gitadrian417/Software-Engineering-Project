@@ -29,6 +29,11 @@ body {
     color: azure;
 }
 
+.task-add-form-warning-text {
+    color: pink;
+    text-shadow: 4px 4px 5px rgb(38, 63, 63);
+}
+
 .calendar {
     margin: auto;
     border: 10px solid rgb(38, 63, 63);
