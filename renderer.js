@@ -19,8 +19,6 @@ function createTask(name, category, priority, dueDate) {
 
   div1.id = "task-div-" + name;
   div1.className = "task-card";
-  h2.className = 'task-card-text';
-  p.className = 'task-card-text';
   h2.innerText = name;
   p.innerText = category;
   editButton.innerText = "Edit";
@@ -75,10 +73,8 @@ function createTaskCard(task) {
   const editButton = document.createElement("button");
   const delButton = document.createElement("button");
 
-  div1.id = "task-div-" + task.name;
-  div1.className = "task-card";
-  h2.className = 'task-card-text';
-  p.className = 'task-card-text';
+  div1.id = 'task-div-' + task.name;
+  div1.className = 'task-card';
   h2.innerText = task.name;
   p.innerText = task.category;
   editButton.innerText = "Edit";
@@ -127,12 +123,12 @@ function renderCalendar() {
     let number = pastDay - i + 1;
 
     let emptyBox = document.createElement("div");
-    emptyBox.className = 'dayBox dayBoxDark'; // Color the past month's day boxes to be darker.
+    emptyBox.className = 'calendar-date-box calendar-date-box-dark'; // Color the past month's day boxes to be darker.
     daysContainer.appendChild(emptyBox);
 
     //add day number to box
     let dateNum = document.createElement('span');
-    dateNum.className = 'dateNum';
+    dateNum.className = 'calendar-date-number';
     dateNum.innerText = number;
     emptyBox.appendChild(dateNum);
   }
@@ -140,7 +136,7 @@ function renderCalendar() {
   //add boxes to calendar
   for (let i = 1; i <= endDay; i++) {
     let box = document.createElement("div");
-    box.className = 'dayBox';
+    box.className = 'calendar-date-box';
     box.addEventListener('mouseenter', (event) => {
       event.target.style.backgroundColor = "rgb(106, 155, 106)";
       //event.target.style.backgroundColor = "purple";
@@ -152,7 +148,7 @@ function renderCalendar() {
 
     //add day number to box
     let dateNum = document.createElement('span');
-    dateNum.className = 'dateNum';
+    dateNum.className = 'calendar-date-number calendar-date-number-dark';
     dateNum.innerText = i;
     box.appendChild(dateNum);
     
