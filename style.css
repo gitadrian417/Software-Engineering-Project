@@ -30,7 +30,6 @@ body {
 }
 
 .calendar {
-    width: 800px;
     margin: auto;
     border: 10px solid rgb(38, 63, 63);
     border-radius: 10px;
@@ -85,7 +84,7 @@ body {
 .dayBox {
     border: 2px solid rgb(51, 146, 51);
     background-color: rgb(194, 223, 194);
-    min-height: 90px;
+    min-height: 15px;
     max-height: 90px;
     overflow-y: auto;
     margin: 1px;
@@ -94,8 +93,8 @@ body {
 .pastDayBox {
     border: 2px solid rgb(27, 56, 27);
     background-color: rgb(102, 116, 102);
-    min-height: 80px;
-    max-height: 120px;
+    min-height: 15px;
+    max-height: 90px;
     overflow-y: auto;
     margin: 1px;
 }
