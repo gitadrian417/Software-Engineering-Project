@@ -13,15 +13,31 @@ PRIORITY_HIGH = 2;
 // Priority: integer (1-3)
 
 class Task {
-  constructor(name, category, priority, dueDate) {
-    this.name = name
-    this.category = category
-    this.priority = priority
-    this.dueDate = dueDate
+  constructor(id, name, category, priority, dueDate) {
+    this.id = id;
+    this.name = name;
+    this.category = category;
+    this.priority = priority;
+    this.dueDate = dueDate;
   }
 }
 
 let tasks = [];
+
+function genTaskId() {
+ var duplicate = false;
+ var id = 0;
+ do {
+    id = Math.random() * 9999999;
+    for (const task of tasks) {
+      if (id == task.id) {
+        duplicate = true;
+        break;
+      }
+    }
+ } while (duplicate == true);
+ return Math.floor(id);
+}
 
 function taskReminderNotif(task) {
   const notification = new Notification({
@@ -55,7 +71,8 @@ function generateTaskReminders() {
 }
 
 function appendTask(event, name, category, priority, dueDate) {
-  let task = new Task(name, category, priority, dueDate);
+  const id = genTaskId();
+  const task = new Task(id, name, category, priority, dueDate);
   tasks.push(task);
 }
 
@@ -78,10 +95,11 @@ function getTasks(event) {
   return tasks;
 }
 
-function writeTasksToFile(tasks) {
+function saveTasksToFile(tasks) {
   const contents = [];
   for (const task of tasks) {
     const record = [];
+    record.push(task.id);
     record.push(task.name);
     record.push(task.category);
     record.push(task.priority);
@@ -110,12 +128,14 @@ function loadTasksFromFile() {
     if (entries.length < 4)
       continue;
 
-    const name = entries[0];
-    const category = entries[1];
-    const priority = parseInt(entries[2]);
-    const date = new Date(entries[3]);
-    const task = new Task(name, category, priority, date);
+    const id = entries[0];
+    const name = entries[1];
+    const category = entries[2];
+    const priority = parseInt(entries[3]);
+    const date = new Date(entries[4]);
+    const task = new Task(id, name, category, priority, date);
     tasks.push(task);
+    //console.log(id);
     //console.log(name);
     //console.log(category);
     //console.log(priority);
@@ -134,7 +154,7 @@ const createWindow = () => {
     }
   });
   win.loadFile('index.html');
-  win.webContents.openDevTools();
+  //win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -153,7 +173,7 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  writeTasksToFile(tasks);
+  saveTasksToFile(tasks);
   if (process.platform !== 'darwin') {
     app.quit();
   }
