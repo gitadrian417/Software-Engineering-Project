@@ -57,7 +57,6 @@ function generateTaskReminders() {
 function appendTask(event, name, category, priority, dueDate) {
   let task = new Task(name, category, priority, dueDate);
   tasks.push(task);
-  taskReminderNotif(task);
 }
 
 //function to remove tasks, iterates through the tasks array and increments index
@@ -135,7 +134,7 @@ const createWindow = () => {
     }
   });
   win.loadFile('index.html');
-  //win.webContents.openDevTools();
+  win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {

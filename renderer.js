@@ -1,6 +1,3 @@
-const h2 = document.getElementById("h2");
-const dayBox = document.getElementById("dayBox");
-
 let currentDate = new Date();
 let tasks = [];
 
@@ -112,7 +109,9 @@ function renderCardView() {
 }
 
 function renderCalendar() {
-  dayBox.innerHTML = "";
+  const monthHeader = document.getElementById("calendar-month-header");
+  const daysContainer = document.getElementById("calendar-days-container");
+  daysContainer.replaceChildren();
 
   //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
   let year = currentDate.getFullYear();
@@ -120,7 +119,7 @@ function renderCalendar() {
   let startDay = new Date(year, month, 1).getDay();
   let endDay = new Date(year, month + 1, 0).getDate();
 
-  h2.innerText = currentDate.toLocaleString("default", {month: "long"}) + " " + year;
+  monthHeader.innerText = currentDate.toLocaleString("default", {month: "long"}) + " " + year;
 
   //add previous month boxes if applicable
   for (let i = startDay; i > 0; i--) {
@@ -129,7 +128,7 @@ function renderCalendar() {
 
     let emptyBox = document.createElement("div");
     emptyBox.className = 'dayBox dayBoxDark'; // Color the past month's day boxes to be darker.
-    dayBox.appendChild(emptyBox);
+    daysContainer.appendChild(emptyBox);
 
     //add day number to box
     let dateNum = document.createElement('span');
@@ -163,7 +162,7 @@ function renderCalendar() {
 
       const taskYear = Number(currentTask.dueDate.getFullYear());
       const taskMonth = Number(currentTask.dueDate.getMonth());
-      const taskDay = Number(currentTask.dueDate.getDate());
+      const taskDay = Number(currentTask.dueDate.getDate()) + 1;
 
       if( taskDay === i &&
           taskMonth === month &&
@@ -199,7 +198,7 @@ function renderCalendar() {
         box.appendChild(taskDiv);
       }
     });
-    dayBox.appendChild(box);
+    daysContainer.appendChild(box);
   }
 }
 
@@ -215,12 +214,11 @@ document.getElementById("prev").addEventListener('click', () => {
 })
 
 document.getElementById('add-new-task').addEventListener('click', () => {
-  let form = document.getElementById('task-edit-form');
+  const form = document.getElementById('task-edit-form');
   if (form.hasAttribute('hidden')) {
     form.removeAttribute('hidden');
-  }
-  else {
-    form.setAttribute('hidden', 'hidden')
+  } else {
+    form.setAttribute('hidden', 'hidden');
   }
 })
 
@@ -246,6 +244,6 @@ document.getElementById('toggle-view').addEventListener('click', async () => {
 
 window.addEventListener('load', async (event) => {
   await refreshTasks();
-  console.log(tasks.length);
+  //console.log(tasks.length);
   renderCardView();
 });

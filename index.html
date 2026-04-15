@@ -29,13 +29,13 @@
           <input type="text" id="task-category-edit" name="task-category-edit"><br><br>
           <label for="task-priority-edit" class='task-add-form-text'>Task Priority Level:</label><br>
           <input type="radio" name="task-priority-edit", value="0">
-          <label class='task-add-form-text'> -> Low</label> 
+          <label class='task-add-form-text'>Low</label> 
           <br>
           <input type="radio" name="task-priority-edit", value="1">
-          <label class='task-add-form-text'> -> Medium</label>
+          <label class='task-add-form-text'>Medium</label>
           <br>
           <input type="radio" name="task-priority-edit", value="2">
-          <label class='task-add-form-text'> -> High</label>
+          <label class='task-add-form-text'>High</label>
           <br>
           <br>
           <label class="task-add-form-text">Task Due Date:</label>
@@ -54,7 +54,7 @@
       <div class="calendar" id="calendar-view" hidden>
         <div class="header">
           <button id="prev"><</button>
-          <h2 id="h2"></h2>
+          <h2 id="calendar-month-header"></h2>
           <button id="next">></button>
         </div>
         <div class="weekdays">
@@ -66,7 +66,7 @@
           <div>Fri</div>  
           <div>Sat</div>
         </div>
-        <div id="dayBox" class="days">
+        <div id="calendar-days-container" class="days">
         </div>
       </div>
     </div>
