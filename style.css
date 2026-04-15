@@ -86,26 +86,17 @@ body {
     background-color: rgb(194, 223, 194);
     min-height: 15px;
     max-height: 90px;
+    aspect-ratio: 1 / 1;
     overflow-y: auto;
     margin: 1px;
 }
 
-.pastDayBox {
+.dayBoxDark {
     border: 2px solid rgb(27, 56, 27);
     background-color: rgb(102, 116, 102);
-    min-height: 15px;
-    max-height: 90px;
-    overflow-y: auto;
-    margin: 1px;
 }
 
 .dateNum {
-    font-weight: bold;
-    font-size: 15px;
-    margin-right: 4px;
-}
-
-.pastDateNum {
     font-weight: bold;
     font-size: 15px;
     margin-right: 4px;

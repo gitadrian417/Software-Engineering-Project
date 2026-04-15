@@ -112,96 +112,95 @@ function renderCardView() {
 }
 
 function renderCalendar() {
-    dayBox.innerHTML = "";
+  dayBox.innerHTML = "";
 
-    //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
-    let year = currentDate.getFullYear();
-    let month = currentDate.getMonth();
-    let startDay = new Date(year, month, 1).getDay();
-    let endDay = new Date(year, month + 1, 0).getDate();
+  //current year, month, starting weekday(monday,tuesday,etc) of the month, ending date(1,2,etc) of the month
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth();
+  let startDay = new Date(year, month, 1).getDay();
+  let endDay = new Date(year, month + 1, 0).getDate();
 
-    h2.innerText = currentDate.toLocaleString("default", {month: "long"}) + " " + year;
+  h2.innerText = currentDate.toLocaleString("default", {month: "long"}) + " " + year;
 
-    //add previous month boxes if applicable
-    for (let i = startDay; i > 0; i--) {
-        let pastDay = new Date(year, month, 0).getDate();
-        let number = pastDay - i + 1;
+  //add previous month boxes if applicable
+  for (let i = startDay; i > 0; i--) {
+    let pastDay = new Date(year, month, 0).getDate();
+    let number = pastDay - i + 1;
 
-        let emptyBox = document.createElement("div");
-        emptyBox.className = 'pastDayBox'; // Color the past month's day boxes to be darker.
-        dayBox.appendChild(emptyBox);
+    let emptyBox = document.createElement("div");
+    emptyBox.className = 'dayBox dayBoxDark'; // Color the past month's day boxes to be darker.
+    dayBox.appendChild(emptyBox);
 
-        //add day number to box
-        let dateNum = document.createElement("span");
-        dateNum.className = "pastDateNum";
-        dateNum.innerText = number;
-        emptyBox.appendChild(dateNum);
-        
-    }
+    //add day number to box
+    let dateNum = document.createElement('span');
+    dateNum.className = 'dateNum';
+    dateNum.innerText = number;
+    emptyBox.appendChild(dateNum);
+  }
 
-    //add boxes to calendar
-    for (let i = 1; i <= endDay; i++) {
-      let box = document.createElement("div");
-      box.className = 'dayBox';
-      box.addEventListener('mouseenter', (event) => {
-        event.target.style.backgroundColor = "rgb(106, 155, 106)";
-        //event.target.style.backgroundColor = "purple";
-      });
-      box.addEventListener('mouseleave', (event) => {
-        event.target.style.backgroundColor = "rgb(194, 223, 194)";
-        //event.target.style.backgroundColor = "orange";
-      });
+  //add boxes to calendar
+  for (let i = 1; i <= endDay; i++) {
+    let box = document.createElement("div");
+    box.className = 'dayBox';
+    box.addEventListener('mouseenter', (event) => {
+      event.target.style.backgroundColor = "rgb(106, 155, 106)";
+      //event.target.style.backgroundColor = "purple";
+    });
+    box.addEventListener('mouseleave', (event) => {
+      event.target.style.backgroundColor = "rgb(194, 223, 194)";
+      //event.target.style.backgroundColor = "orange";
+    });
 
-      //add day number to box
-      let dateNum = document.createElement("span");
-      dateNum.className = "dateNum";
-      dateNum.innerText = i;
-      box.appendChild(dateNum);
-      
-      //add tasks to box if its due on that day 
-      //(currently applies to every month, the actual task class needs a better date structure)
-      tasks.forEach(currentTask => {
+    //add day number to box
+    let dateNum = document.createElement('span');
+    dateNum.className = 'dateNum';
+    dateNum.innerText = i;
+    box.appendChild(dateNum);
+    
+    //add tasks to box if its due on that day 
+    //(currently applies to every month, the actual task class needs a better date structure)
+    tasks.forEach(currentTask => {
 
-        const taskYear = Number(currentTask.dueDate.getFullYear());
-        const taskMonth = Number(currentTask.dueDate.getMonth());
-        const taskDay = Number(currentTask.dueDate.getDate());
+      const taskYear = Number(currentTask.dueDate.getFullYear());
+      const taskMonth = Number(currentTask.dueDate.getMonth());
+      const taskDay = Number(currentTask.dueDate.getDate());
 
-        if( taskDay === i &&
-            taskMonth === month &&
-            taskYear === year
-        ){
-          let taskDiv = document.createElement("div");
-          taskDiv.className = "task";
+      if( taskDay === i &&
+          taskMonth === month &&
+          taskYear === year
+      ){
+        let taskDiv = document.createElement("div");
+        taskDiv.className = "task";
 
-          //colors task based on priority
-          switch(currentTask.priority) {
-            case 0: {
-              let priority = document.createElement("div");
-              priority.className = "task_low";
-              priority.innerText = currentTask.name;
-              taskDiv.appendChild(priority);
-              break;
-            }
-            case 1: {
-              let priority = document.createElement("div");
-              priority.className = "task_mid";
-              priority.innerText = currentTask.name;
-              taskDiv.appendChild(priority)
-              break;
-            }
-            case 2: {
-              let priority = document.createElement("div");
-              priority.className = "task_high";
-              priority.innerText = currentTask.name;
-              taskDiv.appendChild(priority);
-              break;
-            }
+        //colors task based on priority
+        switch(currentTask.priority) {
+          case 0: {
+            let priority = document.createElement("div");
+            priority.className = "task_low";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority);
+            break;
           }
-          box.appendChild(taskDiv);
+          case 1: {
+            let priority = document.createElement("div");
+            priority.className = "task_mid";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority)
+            break;
+          }
+          case 2: {
+            let priority = document.createElement("div");
+            priority.className = "task_high";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority);
+            break;
+          }
         }
-      });
-      dayBox.appendChild(box);
-    }
+        box.appendChild(taskDiv);
+      }
+    });
+    dayBox.appendChild(box);
+  }
 }
 
 //increments/decrements current month by 1 if next/prev is clicked
