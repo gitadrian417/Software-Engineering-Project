@@ -225,15 +225,45 @@ document.getElementById('add-new-task').addEventListener('click', () => {
 document.getElementById('task-edit-form').addEventListener('submit', (event) => {
   event.preventDefault();
 
-  const name = event.target.elements[0].value;
-  const category = event.target.elements[1].value;
-  const priority = parseInt(document.querySelector('input[name="task-priority-edit"]:checked').value);
-  const dueDate = document.getElementById('task-date').valueAsDate;
-  createTask(name, category, priority, dueDate);
+  var valid = true;
 
-  event.target.setAttribute('hidden', 'hidden');
-  event.target.reset();
-  refreshTasks();
+  const radio = document.querySelector('input[name="task-priority-edit"]:checked');
+  var priority = 1;
+  if (radio) {
+    priority = parseInt(radio.value);
+  } else {
+    console.log("Empty Priority!");
+    valid = false;
+  }
+
+  const name = event.target.elements[0].value.trim();
+  if (name.length == 0) {
+    console.log("Empty Name!");
+    valid = false;
+  }
+
+  const category = event.target.elements[1].value.trim();
+  if (category.length == 0) {
+    console.log("Empty Category!");
+    valid = false;
+  }
+
+  const dueDate = document.getElementById('task-date').valueAsDate;
+  if (!dueDate) {
+    console.log("Empty Due-Date!");
+    valid = false;
+  }
+
+  //console.log(Object.prototype.toString.call(name));
+  //console.log(Object.prototype.toString.call(category));
+  //console.log(Object.prototype.toString.call(priority));
+  //console.log(Object.prototype.toString.call(dueDate));
+  if (valid) {
+    createTask(name, category, priority, dueDate);
+    event.target.setAttribute('hidden', 'hidden');
+    event.target.reset();
+    refreshTasks();
+  }
 })
 
 //for calendar view
