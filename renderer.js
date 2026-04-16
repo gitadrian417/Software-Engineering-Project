@@ -4,6 +4,9 @@ let tasks = [];
 //for loading the intial calendar
 const refreshTasks = async () => {
   tasks = await window.electronAPI.getTasks();
+  for (var task of tasks) {
+    task.dueDate.setDate(task.dueDate.getDate() + 1);
+  }
 }
 
 function hideElement(element) {
@@ -120,15 +123,11 @@ function renderCalendar() {
     //add tasks to box if its due on that day 
     //(currently applies to every month, the actual task class needs a better date structure)
     tasks.forEach(currentTask => {
+      const taskYear = currentTask.dueDate.getFullYear();
+      const taskMonth = currentTask.dueDate.getMonth();
+      const taskDay = currentTask.dueDate.getDate();
 
-      const taskYear = Number(currentTask.dueDate.getFullYear());
-      const taskMonth = Number(currentTask.dueDate.getMonth());
-      const taskDay = Number(currentTask.dueDate.getDate()) + 1;
-
-      if( taskDay === i &&
-          taskMonth === month &&
-          taskYear === year
-      ){
+      if (taskDay === i && taskMonth === month && taskYear === year) {
         let taskDiv = document.createElement("div");
         taskDiv.className = "task";
 

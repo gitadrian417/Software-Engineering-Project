@@ -157,12 +157,13 @@ const createWindow = () => {
     }
   });
   window.loadFile('index.html');
+  window.webContents.openDevTools();
   tray = new Tray(path.join(__dirname, 'icon.png'));
-  //window.webContents.openDevTools();
 
   window.on('close', (event) => {
     if (!app.isQuitting) {
       event.preventDefault();
+      saveTasksToFile(tasks);
       window.hide();
     }
     return false;
