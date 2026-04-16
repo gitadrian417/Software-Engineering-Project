@@ -99,6 +99,44 @@ function renderCalendar() {
     dateNum.className = 'calendar-date-number';
     dateNum.innerText = number;
     emptyBox.appendChild(dateNum);
+
+    tasks.forEach(currentTask => {
+      const taskYear = currentTask.dueDate.getFullYear();
+      const taskMonth = currentTask.dueDate.getMonth();
+      const taskDay = currentTask.dueDate.getDate();
+
+      if (taskDay === number && taskMonth === month-1 && taskYear === year) {
+         let taskDiv = document.createElement("div");
+        taskDiv.className = "task";
+
+        //colors task based on priority
+        switch(currentTask.priority) {
+          case 0: {
+            let priority = document.createElement("div");
+            priority.className = "task_low";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority);
+            break;
+          }
+          case 1: {
+            let priority = document.createElement("div");
+            priority.className = "task_mid";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority)
+            break;
+          }
+          case 2: {
+            let priority = document.createElement("div");
+            priority.className = "task_high";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority);
+            break;
+          }
+        }
+        emptyBox.appendChild(taskDiv);
+      }
+    }
+    )
   }
 
   //add boxes to calendar
@@ -107,11 +145,9 @@ function renderCalendar() {
     box.className = 'calendar-date-box';
     box.addEventListener('mouseenter', (event) => {
       event.target.style.backgroundColor = "rgb(106, 155, 106)";
-      //event.target.style.backgroundColor = "purple";
     });
     box.addEventListener('mouseleave', (event) => {
       event.target.style.backgroundColor = "rgb(194, 223, 194)";
-      //event.target.style.backgroundColor = "orange";
     });
 
     //add day number to box
