@@ -2,6 +2,10 @@ const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron/
 const fs = require('fs');
 const path = require('node:path');
 
+PRIORITY_LOW = 0;
+PRIORITY_MEDIUM = 1;
+PRIORITY_HIGH = 2;
+
 // TASK FIELDS
 // Name: string
 // Category: string
@@ -9,15 +13,31 @@ const path = require('node:path');
 // Priority: integer (1-3)
 
 class Task {
-  constructor(name, category, priority, dueDate) {
-    this.name = name
-    this.category = category
-    this.priority = priority
-    this.dueDate = dueDate
+  constructor(id, name, category, priority, dueDate) {
+    this.id = id;
+    this.name = name;
+    this.category = category;
+    this.priority = priority;
+    this.dueDate = dueDate;
   }
 }
 
-let tasks = []
+let tasks = [];
+
+function genTaskId() {
+ var duplicate = false;
+ var id = 0;
+ do {
+    id = Math.random() * 9999999;
+    for (const task of tasks) {
+      if (id == task.id) {
+        duplicate = true;
+        break;
+      }
+    }
+ } while (duplicate == true);
+ return Math.floor(id);
+}
 
 function taskReminderNotif(task) {
   const notification = new Notification({
@@ -27,10 +47,33 @@ function taskReminderNotif(task) {
   notification.show();
 }
 
+function generateTaskReminders() {
+  const agenda = [];
+
+  for (const task of tasks) {
+    const now = new Date();
+    const timeLeft = task.dueDate.getTime() - now.getTime();
+    const daysLeft = (((timeLeft / 1000) / 60) / 60) / 24;
+    if (task.priority == PRIORITY_HIGH) {
+      agenda.push(task);
+    }
+    if (task.priority == PRIORITY_MEDIUM && daysLeft <= 7) {
+      agenda.push(task);
+    }
+    if (task.priority = PRIORITY_LOW && daysLeft <= 1) {
+      agenda.push(task);
+    }
+  }
+
+  for (const task of agenda) {
+    taskReminderNotif(task);
+  }
+}
+
 function appendTask(event, name, category, priority, dueDate) {
-  let task = new Task(name, category, priority, dueDate);
+  const id = genTaskId();
+  const task = new Task(id, name, category, priority, dueDate);
   tasks.push(task);
-  taskReminderNotif(task);
 }
 
 //function to remove tasks, iterates through the tasks array and increments index
@@ -48,18 +91,15 @@ function removeTask(event, name) {
   index = 0
 }
 
-function addToCal(event) {
+function getTasks(event) {
   return tasks;
 }
 
-function buildDateString(date) {
-  return date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
-}
-
-function writeTasksToFile(tasks) {
-  const contents = []
+function saveTasksToFile(tasks) {
+  const contents = [];
   for (const task of tasks) {
-    const record = []
+    const record = [];
+    record.push(task.id);
     record.push(task.name);
     record.push(task.category);
     record.push(task.priority);
@@ -88,21 +128,18 @@ function loadTasksFromFile() {
     if (entries.length < 4)
       continue;
 
-    const name = entries[0];
-    const category = entries[1];
-    const priority = parseInt(entries[2]);
-    const date = new Date(entries[3]);
-
+    const id = entries[0];
+    const name = entries[1];
+    const category = entries[2];
+    const priority = parseInt(entries[3]);
+    const date = new Date(entries[4]);
+    const task = new Task(id, name, category, priority, date);
+    tasks.push(task);
+    //console.log(id);
     //console.log(name);
     //console.log(category);
     //console.log(priority);
     //console.log(date);
-
-    const task = new Task(name, category, priority, date);
-    tasks.push(task);
-    //for (const entry of entries) {
-    //  console.log(entry);
-    //}
   }
 }
 
@@ -115,18 +152,18 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
-  })
-
+  });
   win.loadFile('index.html');
-  //win.webContents.openDevTools()
+  //win.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
+  loadTasksFromFile();
   ipcMain.on('add-task', appendTask);
   ipcMain.on('remove-task', removeTask);
-  ipcMain.handle('addToCal', addToCal)
+  ipcMain.handle('getTasks', getTasks);
   createWindow();
-  loadTasksFromFile();
+  generateTaskReminders();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -136,7 +173,7 @@ app.whenReady().then(() => {
 })
 
 app.on('window-all-closed', () => {
-  writeTasksToFile(tasks);
+  saveTasksToFile(tasks);
   if (process.platform !== 'darwin') {
     app.quit();
   }
