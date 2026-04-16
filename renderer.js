@@ -6,41 +6,6 @@ const refreshTasks = async () => {
   tasks = await window.electronAPI.getTasks();
 }
 
-function createTask(name, category, priority, dueDate) {
-  // Add task to backend
-  window.electronAPI.addTask(name, category, priority, dueDate);
-
-  // Add task to HTML page
-  const div1 = document.createElement("div");
-  const h2 = document.createElement("h2");
-  const p = document.createElement("p");
-  const editButton = document.createElement("button");
-  const delButton = document.createElement("button");
-
-  div1.id = "task-div-" + name;
-  div1.className = "task-card";
-  h2.innerText = name;
-  p.innerText = category;
-  editButton.innerText = "Edit";
-  delButton.innerText = "Delete";
-
-  editButton.addEventListener('click', () => {
-
-  });
-
-  delButton.addEventListener('click', () => {
-    document.getElementById("task-div-"+name).remove();
-    window.electronAPI.removeTask(name);
-  });
-
-  div1.appendChild(h2);
-  div1.appendChild(p);
-  div1.appendChild(editButton);
-  div1.appendChild(delButton);
-  document.getElementById('tasks-card-view').appendChild(div1);
-  console.log("Added new task to page.");
-}
-
 function hideElement(element) {
   element.setAttribute('hidden', 'hidden');
 }
@@ -218,7 +183,7 @@ document.getElementById('add-new-task').addEventListener('click', () => {
   }
 })
 
-document.getElementById('task-edit-form').addEventListener('submit', (event) => {
+document.getElementById('task-edit-form').addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const nameField = event.target.elements[0];
@@ -269,10 +234,16 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
   //console.log(Object.prototype.toString.call(priority));
   //console.log(Object.prototype.toString.call(dueDate));
   if (valid) {
-    createTask(name, category, priority, dueDate);
+    //createTask(name, category, priority, dueDate);
+    window.electronAPI.addTask(name, category, priority, dueDate);
+    await refreshTasks();
+    if (document.getElementById('tasks-card-view').hasAttribute('hidden')) {
+      renderCalendar();
+    } else {
+      renderCardView();
+    }
     event.target.setAttribute('hidden', 'hidden');
     event.target.reset();
-    refreshTasks();
   }
 })
 
