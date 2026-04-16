@@ -1,10 +1,13 @@
-const { app, BrowserWindow, ipcMain, dialog, Notification } = require('electron/main');
+const { app, BrowserWindow, ipcMain, Notification, Menu, Tray } = require('electron/main');
 const fs = require('fs');
 const path = require('node:path');
 
 PRIORITY_LOW = 0;
 PRIORITY_MEDIUM = 1;
 PRIORITY_HIGH = 2;
+
+let window = null;
+let tray = null;
 
 // TASK FIELDS
 // Name: string
@@ -144,7 +147,7 @@ function loadTasksFromFile() {
 }
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  window = new BrowserWindow({
     width: 800,
     height: 600,
     title: 'Task Tracker',
@@ -153,9 +156,31 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js')
     }
   });
-  win.loadFile('index.html');
-  //win.webContents.openDevTools();
-}
+  window.loadFile('index.html');
+  tray = new Tray(path.join(__dirname, 'icon.png'));
+  //window.webContents.openDevTools();
+
+  window.on('close', (event) => {
+    if (!app.isQuitting) {
+      event.preventDefault();
+      window.hide();
+    }
+    return false;
+  });
+
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Open', click: () => window.show() },
+    { label: 'Exit', click: () => {
+        app.isQuiting = true;
+        app.quit();
+      }
+    }
+  ]);
+  tray.setContextMenu(contextMenu);
+  tray.on('click', () => {
+    window.isVisible() ? window.focus() : window.show();
+  });
+};
 
 app.whenReady().then(() => {
   loadTasksFromFile();
@@ -170,11 +195,11 @@ app.whenReady().then(() => {
       createWindow();
     }
   })
-})
+});
 
 app.on('window-all-closed', () => {
   saveTasksToFile(tasks);
   if (process.platform !== 'darwin') {
     app.quit();
   }
-})
+});
