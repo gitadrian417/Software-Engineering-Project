@@ -33,35 +33,68 @@ function switchViews() {
   }
 }
 
+function makeDateString(date) {
+  return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+}
+
+function makePriorityString(priority) {
+  if (priority == 0) {
+    return "Low Priority";
+  } else if (priority == 1) {
+    return "Medium Priority";
+  } else if (priority == 2) {
+    return "High Priority";
+  }
+  return "Invalid Priority";
+}
+
 function createTaskCard(task) {
   // Add task to HTML page
-  const div1 = document.createElement("div");
-  const h2 = document.createElement("h2");
-  const p = document.createElement("p");
+  const container = document.createElement("div");
+  container.id = 'task-card-' + task.id;
+  container.className = 'task-card';
+
+  const leftSpan = document.createElement('span');
+  //leftSpan.innerText = task.name;
+
+  const rightSpan = document.createElement('span');
+  //rightSpan.innerText = makeDateString(task.dueDate);
+
+  const taskName = document.createElement('h2');
+  taskName.innerText = task.name;
+
+  const taskDueDate = document.createElement('h2');
+  taskDueDate.innerText = makeDateString(task.dueDate);
+
+  const taskCategory = document.createElement('p');
+  taskCategory.innerText = task.category;
+
+  const taskPriority = document.createElement('p');
+  taskPriority.innerText = makePriorityString(task.priority);
+
   const editButton = document.createElement("button");
-  const delButton = document.createElement("button");
-
-  div1.id = 'task-div-' + task.name;
-  div1.className = 'task-card';
-  h2.innerText = task.name;
-  p.innerText = task.category;
   editButton.innerText = "Edit";
-  delButton.innerText = "Delete";
-
   editButton.addEventListener('click', () => {
 
   });
 
+  const delButton = document.createElement("button");
+  delButton.innerText = "Delete";
   delButton.addEventListener('click', () => {
-    document.getElementById("task-div-"+task.name).remove();
+    document.getElementById("task-card-"+task.id).remove();
     window.electronAPI.removeTask(task.name);
   });
 
-  div1.appendChild(h2);
-  div1.appendChild(p);
-  div1.appendChild(editButton);
-  div1.appendChild(delButton);
-  document.getElementById('tasks-card-view').appendChild(div1);
+  leftSpan.appendChild(taskName);
+  leftSpan.appendChild(taskCategory);
+  leftSpan.appendChild(editButton);
+  leftSpan.appendChild(delButton);
+  rightSpan.appendChild(taskDueDate);
+  rightSpan.appendChild(taskPriority);
+
+  container.appendChild(leftSpan);
+  container.appendChild(rightSpan);
+  document.getElementById('tasks-card-view').appendChild(container);
   //console.log("Added new task to page.");
 }
 

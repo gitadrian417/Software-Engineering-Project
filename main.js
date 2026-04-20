@@ -157,7 +157,7 @@ const createWindow = () => {
     }
   });
   window.loadFile('index.html');
-  window.webContents.openDevTools();
+  //window.webContents.openDevTools();
   tray = new Tray(path.join(__dirname, 'icon.png'));
 
   window.on('close', (event) => {
