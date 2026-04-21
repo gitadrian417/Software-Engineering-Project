@@ -4,41 +4,9 @@ let tasks = [];
 //for loading the intial calendar
 const refreshTasks = async () => {
   tasks = await window.electronAPI.getTasks();
-}
-
-function createTask(name, category, priority, dueDate) {
-  // Add task to backend
-  window.electronAPI.addTask(name, category, priority, dueDate);
-
-  // Add task to HTML page
-  const div1 = document.createElement("div");
-  const h2 = document.createElement("h2");
-  const p = document.createElement("p");
-  const editButton = document.createElement("button");
-  const delButton = document.createElement("button");
-
-  div1.id = "task-div-" + name;
-  div1.className = "task-card";
-  h2.innerText = name;
-  p.innerText = category;
-  editButton.innerText = "Edit";
-  delButton.innerText = "Delete";
-
-  editButton.addEventListener('click', () => {
-
-  });
-
-  delButton.addEventListener('click', () => {
-    document.getElementById("task-div-"+name).remove();
-    window.electronAPI.removeTask(name);
-  });
-
-  div1.appendChild(h2);
-  div1.appendChild(p);
-  div1.appendChild(editButton);
-  div1.appendChild(delButton);
-  document.getElementById('tasks-card-view').appendChild(div1);
-  console.log("Added new task to page.");
+  for (var task of tasks) {
+    task.dueDate.setDate(task.dueDate.getDate() + 1);
+  }
 }
 
 function hideElement(element) {
@@ -65,35 +33,68 @@ function switchViews() {
   }
 }
 
+function makeDateString(date) {
+  return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+}
+
+function makePriorityString(priority) {
+  if (priority == 0) {
+    return "Low Priority";
+  } else if (priority == 1) {
+    return "Medium Priority";
+  } else if (priority == 2) {
+    return "High Priority";
+  }
+  return "Invalid Priority";
+}
+
 function createTaskCard(task) {
   // Add task to HTML page
-  const div1 = document.createElement("div");
-  const h2 = document.createElement("h2");
-  const p = document.createElement("p");
+  const container = document.createElement("div");
+  container.id = 'task-card-' + task.id;
+  container.className = 'task-card';
+
+  const leftSpan = document.createElement('span');
+  //leftSpan.innerText = task.name;
+
+  const rightSpan = document.createElement('span');
+  //rightSpan.innerText = makeDateString(task.dueDate);
+
+  const taskName = document.createElement('h2');
+  taskName.innerText = task.name;
+
+  const taskDueDate = document.createElement('h2');
+  taskDueDate.innerText = makeDateString(task.dueDate);
+
+  const taskCategory = document.createElement('p');
+  taskCategory.innerText = task.category;
+
+  const taskPriority = document.createElement('p');
+  taskPriority.innerText = makePriorityString(task.priority);
+
   const editButton = document.createElement("button");
-  const delButton = document.createElement("button");
-
-  div1.id = 'task-div-' + task.name;
-  div1.className = 'task-card';
-  h2.innerText = task.name;
-  p.innerText = task.category;
   editButton.innerText = "Edit";
-  delButton.innerText = "Delete";
-
   editButton.addEventListener('click', () => {
 
   });
 
+  const delButton = document.createElement("button");
+  delButton.innerText = "Delete";
   delButton.addEventListener('click', () => {
-    document.getElementById("task-div-"+task.name).remove();
-    window.electronAPI.removeTask(task.name);
+    document.getElementById("task-card-"+task.id).remove();
+    window.electronAPI.removeTask(task.id);
   });
 
-  div1.appendChild(h2);
-  div1.appendChild(p);
-  div1.appendChild(editButton);
-  div1.appendChild(delButton);
-  document.getElementById('tasks-card-view').appendChild(div1);
+  leftSpan.appendChild(taskName);
+  leftSpan.appendChild(taskCategory);
+  leftSpan.appendChild(editButton);
+  leftSpan.appendChild(delButton);
+  rightSpan.appendChild(taskDueDate);
+  rightSpan.appendChild(taskPriority);
+
+  container.appendChild(leftSpan);
+  container.appendChild(rightSpan);
+  document.getElementById('tasks-card-view').appendChild(container);
   //console.log("Added new task to page.");
 }
 
@@ -131,6 +132,44 @@ function renderCalendar() {
     dateNum.className = 'calendar-date-number';
     dateNum.innerText = number;
     emptyBox.appendChild(dateNum);
+
+    tasks.forEach(currentTask => {
+      const taskYear = currentTask.dueDate.getFullYear();
+      const taskMonth = currentTask.dueDate.getMonth();
+      const taskDay = currentTask.dueDate.getDate();
+
+      if (taskDay === number && taskMonth === month-1 && taskYear === year) {
+         let taskDiv = document.createElement("div");
+        taskDiv.className = "task";
+
+        //colors task based on priority
+        switch(currentTask.priority) {
+          case 0: {
+            let priority = document.createElement("div");
+            priority.className = "task_low";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority);
+            break;
+          }
+          case 1: {
+            let priority = document.createElement("div");
+            priority.className = "task_mid";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority)
+            break;
+          }
+          case 2: {
+            let priority = document.createElement("div");
+            priority.className = "task_high";
+            priority.innerText = currentTask.name;
+            taskDiv.appendChild(priority);
+            break;
+          }
+        }
+        emptyBox.appendChild(taskDiv);
+      }
+    }
+    )
   }
 
   //add boxes to calendar
@@ -139,11 +178,9 @@ function renderCalendar() {
     box.className = 'calendar-date-box';
     box.addEventListener('mouseenter', (event) => {
       event.target.style.backgroundColor = "rgb(106, 155, 106)";
-      //event.target.style.backgroundColor = "purple";
     });
     box.addEventListener('mouseleave', (event) => {
       event.target.style.backgroundColor = "rgb(194, 223, 194)";
-      //event.target.style.backgroundColor = "orange";
     });
 
     //add day number to box
@@ -155,15 +192,11 @@ function renderCalendar() {
     //add tasks to box if its due on that day 
     //(currently applies to every month, the actual task class needs a better date structure)
     tasks.forEach(currentTask => {
+      const taskYear = currentTask.dueDate.getFullYear();
+      const taskMonth = currentTask.dueDate.getMonth();
+      const taskDay = currentTask.dueDate.getDate();
 
-      const taskYear = Number(currentTask.dueDate.getFullYear());
-      const taskMonth = Number(currentTask.dueDate.getMonth());
-      const taskDay = Number(currentTask.dueDate.getDate()) + 1;
-
-      if( taskDay === i &&
-          taskMonth === month &&
-          taskYear === year
-      ){
+      if (taskDay === i && taskMonth === month && taskYear === year) {
         let taskDiv = document.createElement("div");
         taskDiv.className = "task";
 
@@ -218,7 +251,7 @@ document.getElementById('add-new-task').addEventListener('click', () => {
   }
 })
 
-document.getElementById('task-edit-form').addEventListener('submit', (event) => {
+document.getElementById('task-edit-form').addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const nameField = event.target.elements[0];
@@ -269,10 +302,16 @@ document.getElementById('task-edit-form').addEventListener('submit', (event) => 
   //console.log(Object.prototype.toString.call(priority));
   //console.log(Object.prototype.toString.call(dueDate));
   if (valid) {
-    createTask(name, category, priority, dueDate);
+    //createTask(name, category, priority, dueDate);
+    window.electronAPI.addTask(name, category, priority, dueDate);
+    await refreshTasks();
+    if (document.getElementById('tasks-card-view').hasAttribute('hidden')) {
+      renderCalendar();
+    } else {
+      renderCardView();
+    }
     event.target.setAttribute('hidden', 'hidden');
     event.target.reset();
-    refreshTasks();
   }
 })
 
