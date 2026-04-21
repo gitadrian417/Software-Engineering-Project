@@ -73,6 +73,7 @@ function createTaskCard(task) {
   taskPriority.innerText = makePriorityString(task.priority);
 
   const editButton = document.createElement("button");
+  editButton.id = 'editButton'
   editButton.innerText = "Edit";
   editButton.addEventListener('click', () => {
 
@@ -80,6 +81,7 @@ function createTaskCard(task) {
 
   const delButton = document.createElement("button");
   delButton.innerText = "Delete";
+  delButton.id = 'delButton'
   delButton.addEventListener('click', () => {
     document.getElementById("task-card-"+task.id).remove();
     window.electronAPI.removeTask(task.id);
@@ -87,10 +89,11 @@ function createTaskCard(task) {
 
   leftSpan.appendChild(taskName);
   leftSpan.appendChild(taskCategory);
-  leftSpan.appendChild(editButton);
-  leftSpan.appendChild(delButton);
+  
   rightSpan.appendChild(taskDueDate);
   rightSpan.appendChild(taskPriority);
+  rightSpan.appendChild(editButton);
+  rightSpan.appendChild(delButton);
 
   container.appendChild(leftSpan);
   container.appendChild(rightSpan);
