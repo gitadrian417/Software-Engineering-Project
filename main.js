@@ -63,10 +63,23 @@ function generateTaskReminders() {
   }
 }
 
-function appendTask(event, name, category, priority, dueDate) {
+function addTask(event, name, category, priority, dueDate) {
   const id = genTaskId();
   const task = new Task(id, name, category, priority, dueDate);
   tasks.push(task);
+}
+
+function editTask(event, id, name, category, priority, dueDate) {
+  for (task of tasks) {
+    if (task.id === id) {
+      task.name = name;
+      task.category = category;
+      task.priority = priority;
+      task.dueDate = dueDate;
+      return;
+    }
+  }
+  console.log(`Error: tried to edit task ${id} which does not exist.`);
 }
 
 //function to remove tasks, iterates through the tasks array and increments index
@@ -172,7 +185,8 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   loadTasksFromFile();
-  ipcMain.on('add-task', appendTask);
+  ipcMain.on('add-task', addTask);
+  ipcMain.on('edit-task', editTask);
   ipcMain.on('remove-task', removeTask);
   ipcMain.handle('getTasks', getTasks);
   createWindow();

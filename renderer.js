@@ -1,5 +1,8 @@
 let currentDate = new Date();
 let tasks = [];
+// ID of the task currently being edited.
+// Negative number means no task is being edited.
+let taskBeingEdited = -1;
 
 //for loading the intial calendar
 const refreshTasks = async () => {
@@ -76,7 +79,14 @@ function createTaskCard(task) {
   editButton.id = 'editButton'
   editButton.innerText = "Edit";
   editButton.addEventListener('click', () => {
-
+    const form = document.getElementById('task-edit-form');
+    if (form.hasAttribute('hidden')) {
+      taskBeingEdited = task.id;
+      document.getElementById('task-edit-form-header').innerText = "Editing Task";
+      form.removeAttribute('hidden');
+    } else {
+      form.setAttribute('hidden', 'hidden');
+    }
   });
 
   const delButton = document.createElement("button");
@@ -248,6 +258,8 @@ document.getElementById("prev").addEventListener('click', () => {
 document.getElementById('add-new-task').addEventListener('click', () => {
   const form = document.getElementById('task-edit-form');
   if (form.hasAttribute('hidden')) {
+    taskBeingEdited = -1;
+    document.getElementById('task-edit-form-header').innerText = "Creating New Task";
     form.removeAttribute('hidden');
   } else {
     form.setAttribute('hidden', 'hidden');
@@ -305,8 +317,11 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
   //console.log(Object.prototype.toString.call(priority));
   //console.log(Object.prototype.toString.call(dueDate));
   if (valid) {
-    //createTask(name, category, priority, dueDate);
-    window.electronAPI.addTask(name, category, priority, dueDate);
+    if (taskBeingEdited < 0) {
+      window.electronAPI.addTask(name, category, priority, dueDate);
+    } else {
+      window.electronAPI.editTask(taskBeingEdited, name, category, priority, dueDate);
+    }
     await refreshTasks();
     if (document.getElementById('tasks-card-view').hasAttribute('hidden')) {
       renderCalendar();
