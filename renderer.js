@@ -82,7 +82,7 @@ function createTaskCard(task) {
   delButton.innerText = "Delete";
   delButton.addEventListener('click', () => {
     document.getElementById("task-card-"+task.id).remove();
-    window.electronAPI.removeTask(task.name);
+    window.electronAPI.removeTask(task.id);
   });
 
   leftSpan.appendChild(taskName);
