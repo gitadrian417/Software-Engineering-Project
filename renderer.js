@@ -51,6 +51,18 @@ function makePriorityString(priority) {
   return "Invalid Priority";
 }
 
+// Sets the selected value of the priority radio control in the task edit form.
+// Parameter priority should be an integer on the interval [0, 2].
+function setTaskEditFormPriority(priority) {
+  const radio = document.getElementsByName('task-priority-edit');
+  for (option of radio) {
+    if (option.value == priority) {
+      option.checked = true;
+      break;
+    }
+  }
+}
+
 function createTaskCard(task) {
   // Add task to HTML page
   const container = document.createElement("div");
@@ -76,16 +88,27 @@ function createTaskCard(task) {
   taskPriority.innerText = makePriorityString(task.priority);
 
   const editButton = document.createElement("button");
-  editButton.id = 'editButton'
+  editButton.id = 'editButton';
   editButton.innerText = "Edit";
   editButton.addEventListener('click', () => {
     const form = document.getElementById('task-edit-form');
     if (form.hasAttribute('hidden')) {
       taskBeingEdited = task.id;
-      document.getElementById('task-edit-form-header').innerText = "Editing Task";
+
+      document.getElementById('task-edit-form-header').innerText = `Editing '${task.name}'`;
+      document.getElementById('task-name-edit').value = task.name;
+      document.getElementById('task-category-edit').value = task.category;
+      setTaskEditFormPriority(task.priority);
+      newDueDate = new Date(task.dueDate); // Decrement day by one because of timezone shenanigans
+      newDueDate.setDate(newDueDate.getDate() - 1);
+      document.getElementById('task-date-edit').valueAsDate = newDueDate;
+
       form.removeAttribute('hidden');
+      editButton.innerText = "Cancel";
     } else {
+      editButton.innerText = "Edit";
       form.setAttribute('hidden', 'hidden');
+      taskBeingEdited = -1;
     }
   });
 
@@ -255,13 +278,22 @@ document.getElementById("prev").addEventListener('click', () => {
     renderCalendar();
 })
 
-document.getElementById('add-new-task').addEventListener('click', () => {
+document.getElementById('add-new-task').addEventListener('click', (event) => {
   const form = document.getElementById('task-edit-form');
   if (form.hasAttribute('hidden')) {
     taskBeingEdited = -1;
+
     document.getElementById('task-edit-form-header').innerText = "Creating New Task";
+    document.getElementById('task-name-edit').value = "";
+    document.getElementById('task-category-edit').value = "";
+    setTaskEditFormPriority(1);
+    newDueDate = new Date();
+    document.getElementById('task-date-edit').valueAsDate = newDueDate;
+
     form.removeAttribute('hidden');
+    event.target.innerText = "Cancel";
   } else {
+    event.target.innerText = "Add New Task";
     form.setAttribute('hidden', 'hidden');
   }
 })
@@ -272,7 +304,7 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
   const nameField = event.target.elements[0];
   const categoryField = event.target.elements[1];
   const priorityField = document.querySelector('input[name="task-priority-edit"]:checked');
-  const dueDateField = document.getElementById('task-date');
+  const dueDateField = document.getElementById('task-date-edit');
 
   var valid = true;
   var priority = 1;
