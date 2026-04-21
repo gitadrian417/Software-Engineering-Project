@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, Notification, Menu, Tray } = require('electron/main');
+const crypto = require('crypto');
 const fs = require('fs');
 const path = require('node:path');
 
@@ -28,18 +29,7 @@ class Task {
 let tasks = [];
 
 function genTaskId() {
- var duplicate = false;
- var id = 0;
- do {
-    id = Math.random() * 9999999;
-    for (const task of tasks) {
-      if (id == task.id) {
-        duplicate = true;
-        break;
-      }
-    }
- } while (duplicate == true);
- return Math.floor(id);
+  return crypto.randomUUID();
 }
 
 function taskReminderNotif(task) {
@@ -82,16 +72,13 @@ function appendTask(event, name, category, priority, dueDate) {
 //function to remove tasks, iterates through the tasks array and increments index
 //once it finds the name of the task, it removes it at index
 let index = 0;
-function removeTask(event, name) {
-  tasks.forEach(currentTask => {
-    if (currentTask.name == name) {
-      tasks.splice(index, 1)
-    }
-    else {
-      index += 1;
-    }
-  })
-  index = 0
+function removeTask(event, id) {
+  const index = tasks.findIndex(task => task.id === id);
+
+  if (index !== -1) {
+    tasks.splice(index, 1);
+    saveTasksToFile(tasks);
+  }
 }
 
 function getTasks(event) {
