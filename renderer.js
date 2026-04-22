@@ -70,10 +70,8 @@ function createTaskCard(task) {
   container.className = 'task-card';
 
   const leftSpan = document.createElement('span');
-  //leftSpan.innerText = task.name;
 
   const rightSpan = document.createElement('span');
-  //rightSpan.innerText = makeDateString(task.dueDate);
 
   const taskName = document.createElement('h2');
   taskName.innerText = task.name;
@@ -88,7 +86,8 @@ function createTaskCard(task) {
   taskPriority.innerText = makePriorityString(task.priority);
 
   const editButton = document.createElement("button");
-  editButton.id = 'editButton';
+  editButton.id = 'editButton' + task.id;
+  editButton.className = 'editButton'
   editButton.innerText = "Edit";
   editButton.addEventListener('click', () => {
     const form = document.getElementById('task-edit-form');
@@ -105,10 +104,16 @@ function createTaskCard(task) {
 
       form.removeAttribute('hidden');
       editButton.innerText = "Cancel";
-    } else {
+    } 
+        
+    else {
       editButton.innerText = "Edit";
       form.setAttribute('hidden', 'hidden');
       taskBeingEdited = -1;
+      const createButton = document.getElementById('add-new-task')
+      if (createButton.innerText != 'Add New Task') {
+        createButton.innerText = 'Add New Task'
+      }
     }
   });
 
@@ -131,7 +136,6 @@ function createTaskCard(task) {
   container.appendChild(leftSpan);
   container.appendChild(rightSpan);
   document.getElementById('tasks-card-view').appendChild(container);
-  //console.log("Added new task to page.");
 }
 
 function renderCardView() {
@@ -280,6 +284,17 @@ document.getElementById("prev").addEventListener('click', () => {
 
 document.getElementById('add-new-task').addEventListener('click', (event) => {
   const form = document.getElementById('task-edit-form');
+
+  if (taskBeingEdited != -1) {
+    tasks.forEach(currentTask => {
+      if (currentTask.id == taskBeingEdited) {
+        change = document.getElementById('editButton' + currentTask.id)
+        change.innerText = "Edit"
+        taskBeingEdited = -1
+      }
+    }) 
+  }
+
   if (form.hasAttribute('hidden')) {
     taskBeingEdited = -1;
 
@@ -296,6 +311,7 @@ document.getElementById('add-new-task').addEventListener('click', (event) => {
     event.target.innerText = "Add New Task";
     form.setAttribute('hidden', 'hidden');
   }
+
 })
 
 document.getElementById('task-edit-form').addEventListener('submit', async (event) => {
@@ -319,6 +335,7 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
     valid = false;
     nameField.style.backgroundColor = "rgb(255, 127, 127)";
     const warning = document.createElement("p");
+    warning.id = 'name-warning'
     warning.innerText = "Name required!";
     warning.className = 'task-add-form-warning-text';
     nameField.after(warning);
@@ -329,6 +346,7 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
     valid = false;
     categoryField.style.backgroundColor = "rgb(255, 127, 127)";
     const warning = document.createElement("p");
+    warning.id = 'cat-warning'
     warning.innerText = "Category required!";
     warning.className = 'task-add-form-warning-text';
     categoryField.after(warning);
@@ -339,15 +357,12 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
     valid = false;
     dueDateField.style.backgroundColor = "rgb(255, 127, 127)";
     const warning = document.createElement("p");
+    warning.id = 'date-warning'
     warning.innerText = "Due date required!";
     warning.className = 'task-add-form-warning-text';
     dueDateField.after(warning);
   }
 
-  //console.log(Object.prototype.toString.call(name));
-  //console.log(Object.prototype.toString.call(category));
-  //console.log(Object.prototype.toString.call(priority));
-  //console.log(Object.prototype.toString.call(dueDate));
   if (valid) {
     if (taskBeingEdited < 0) {
       window.electronAPI.addTask(name, category, priority, dueDate);
@@ -359,20 +374,35 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
       renderCalendar();
     } else {
       renderCardView();
-    }
+    } 
+    if (document.getElementById('add-new-task').innerText != 'Add New Task') {
+      document.getElementById('add-new-task').innerText = 'Add New Task'
+    } 
     event.target.setAttribute('hidden', 'hidden');
     event.target.reset();
+
+    if(document.getElementById('name-warning')) {
+      nameField.style.backgroundColor = "rgb(194, 223, 194)"
+      document.getElementById('name-warning').remove()
+    }
+    if(document.getElementById('cat-warning')) {
+      categoryField.style.backgroundColor = "rgb(194, 223, 194)"
+      document.getElementById('cat-warning').remove()
+    }
+    if(document.getElementById('date-warning')) {
+      dueDateField.style.backgroundColor = "rgb(194, 223, 194)"
+      document.getElementById('date-warning').remove()
+    }
   }
 })
 
 //for calendar view
 document.getElementById('toggle-view').addEventListener('click', async () => {
-  refreshTasks();
+  await refreshTasks();
   switchViews();
 })
 
 window.addEventListener('load', async (event) => {
   await refreshTasks();
-  //console.log(tasks.length);
   renderCardView();
 });
