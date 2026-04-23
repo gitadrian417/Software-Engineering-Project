@@ -17,12 +17,13 @@ let tray = null;
 // Priority: integer (1-3)
 
 class Task {
-  constructor(id, name, category, priority, dueDate) {
+  constructor(id, name, category, priority, dueDate, color) {
     this.id = id;
     this.name = name;
     this.category = category;
     this.priority = priority;
     this.dueDate = dueDate;
+    this.color = color;
   }
 }
 
@@ -63,19 +64,20 @@ function generateTaskReminders() {
   }
 }
 
-function addTask(event, name, category, priority, dueDate) {
+function addTask(event, name, category, priority, dueDate, color) {
   const id = genTaskId();
-  const task = new Task(id, name, category, priority, dueDate);
+  const task = new Task(id, name, category, priority, dueDate, color);
   tasks.push(task);
 }
 
-function editTask(event, id, name, category, priority, dueDate) {
+function editTask(event, id, name, category, priority, dueDate, color) {
   for (task of tasks) {
     if (task.id === id) {
       task.name = name;
       task.category = category;
       task.priority = priority;
       task.dueDate = dueDate;
+      task.color = color;
       return;
     }
   }
