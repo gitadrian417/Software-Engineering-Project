@@ -62,16 +62,99 @@ function setTaskEditFormPriority(priority) {
     }
   }
 }
+function setTaskColorForm(color) {
+  const radio = document.getElementsByName('task-color');
+  for (option of radio) {
+    if (option.value == color) {
+      option.checked = true;
+      break;
+    }
+  }
+}
 
 function createTaskCard(task) {
   // Add task to HTML page
   const container = document.createElement("div");
   container.id = 'task-card-' + task.id;
   container.className = 'task-card';
+ 
+  let colorbox = document.createElement('div')
 
   const leftSpan = document.createElement('span');
-
   const rightSpan = document.createElement('span');
+
+  const taskColor = document.createElement('p');
+  taskColor.innerText = "Color (" + task.color + "):";
+
+  //for adding color to tasks
+  switch(task.color) {
+    case "blue": {
+      if (task.priority == 0) { 
+        colorbox.className = 'task-color-box blue-low'
+      }
+      else if (task.priority == 1) {
+        colorbox.className = 'task-color-box blue-mid'      
+      }
+      else {
+        colorbox.className = 'task-color-box blue-high'      
+      }
+      break;
+    }
+  
+    case "green": {
+      if (task.priority == 0) { 
+        colorbox.className = 'task-color-box green-low'
+      }
+      else if (task.priority == 1) {
+        colorbox.className = 'task-color-box green-mid'
+      }
+      else {
+        colorbox.className = 'task-color-box green-high'
+      }
+      break;
+    }
+
+    case "grey": {
+      if (task.priority == 0) { 
+        colorbox.className = 'task-color-box grey-low'
+      }
+      else if (task.priority == 1) {
+        colorbox.className = 'task-color-box grey-mid'
+      }
+      else {
+        colorbox.className = 'task-color-box grey-high'
+      }
+      break;
+    }
+
+    case "purple": {
+      if (task.priority == 0) { 
+        colorbox.className = 'task-color-box purple-low'
+      }
+      else if (task.priority == 1) {
+        colorbox.className = 'task-color-box purple-mid'
+
+      }
+      else {
+        colorbox.className = 'task-color-box purple-high'
+      }
+      break;
+    }
+
+    case "red": {
+      if (task.priority == 0) { 
+        colorbox.className = 'task-color-box red-low'
+      }
+      else if (task.priority == 1) {
+        colorbox.className = 'task-color-box red-mid'
+
+      }
+      else {
+        colorbox.className = 'task-color-box red-high'
+      }
+      break;
+    }
+  }
 
   const taskName = document.createElement('h2');
   taskName.innerText = task.name;
@@ -98,6 +181,7 @@ function createTaskCard(task) {
       document.getElementById('task-name-edit').value = task.name;
       document.getElementById('task-category-edit').value = task.category;
       setTaskEditFormPriority(task.priority);
+      setTaskColorForm(task.color)
       newDueDate = new Date(task.dueDate); // Decrement day by one because of timezone shenanigans
       newDueDate.setDate(newDueDate.getDate() - 1);
       document.getElementById('task-date-edit').valueAsDate = newDueDate;
@@ -127,6 +211,10 @@ function createTaskCard(task) {
 
   leftSpan.appendChild(taskName);
   leftSpan.appendChild(taskCategory);
+  leftSpan.appendChild(taskColor)
+          leftSpan.appendChild(colorbox)
+
+
   
   rightSpan.appendChild(taskDueDate);
   rightSpan.appendChild(taskPriority);
@@ -179,37 +267,49 @@ function renderCalendar() {
       const taskDay = currentTask.dueDate.getDate();
 
       if (taskDay === number && taskMonth === month-1 && taskYear === year) {
-         let taskDiv = document.createElement("div");
+        let taskDiv = document.createElement("div");
         taskDiv.className = "task";
+        let task_cal_box = document.createElement("div");
+        task_cal_box.className = "task_priority"
 
-        //colors task based on priority
-        switch(currentTask.priority) {
-          case 0: {
-            let priority = document.createElement("div");
-            priority.className = "task_low";
-            priority.innerText = currentTask.name;
-            taskDiv.appendChild(priority);
+        switch(currentTask.color) {
+          case "blue": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' blue-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' blue-mid'}
+            else {task_cal_box.className += ' blue-high'}
             break;
           }
-          case 1: {
-            let priority = document.createElement("div");
-            priority.className = "task_mid";
-            priority.innerText = currentTask.name;
-            taskDiv.appendChild(priority)
+          case "green": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' green-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' green-mid'}
+            else {task_cal_box.className += ' green-high'}
+            break;
+          }          
+          case "grey": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' grey-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' grey-mid'}
+            else {task_cal_box.className += ' grey-high'}
             break;
           }
-          case 2: {
-            let priority = document.createElement("div");
-            priority.className = "task_high";
-            priority.innerText = currentTask.name;
-            taskDiv.appendChild(priority);
+          case "purple": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' purple-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' purple-mid'}
+            else {task_cal_box.className += ' purple-high'}
+            break;
+          }
+          case "red": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' red-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' red-mid'}
+            else {task_cal_box.className += ' red-high'}
             break;
           }
         }
+
+        task_cal_box.innerText = currentTask.name
+        taskDiv.appendChild(task_cal_box)
         emptyBox.appendChild(taskDiv);
       }
-    }
-    )
+    })
   }
 
   //add boxes to calendar
@@ -239,31 +339,44 @@ function renderCalendar() {
       if (taskDay === i && taskMonth === month && taskYear === year) {
         let taskDiv = document.createElement("div");
         taskDiv.className = "task";
+        let task_cal_box = document.createElement("div");
+        task_cal_box.className = "task_priority"
 
         //colors task based on priority
-        switch(currentTask.priority) {
-          case 0: {
-            let priority = document.createElement("div");
-            priority.className = "task_low";
-            priority.innerText = currentTask.name;
-            taskDiv.appendChild(priority);
+        switch(currentTask.color) {
+          case "blue": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' blue-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' blue-mid'}
+            else {task_cal_box.className += ' blue-high'}
             break;
           }
-          case 1: {
-            let priority = document.createElement("div");
-            priority.className = "task_mid";
-            priority.innerText = currentTask.name;
-            taskDiv.appendChild(priority)
+          case "green": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' green-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' green-mid'}
+            else {task_cal_box.className += ' green-high'}
+            break;
+          }          
+          case "grey": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' grey-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' grey-mid'}
+            else {task_cal_box.className += ' grey-high'}
             break;
           }
-          case 2: {
-            let priority = document.createElement("div");
-            priority.className = "task_high";
-            priority.innerText = currentTask.name;
-            taskDiv.appendChild(priority);
+          case "purple": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' purple-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' purple-mid'}
+            else {task_cal_box.className += ' purple-high'}
+            break;
+          }
+          case "red": {
+            if (currentTask.priority == 0) {task_cal_box.className += ' red-low'}
+            else if (currentTask.priority == 1) {task_cal_box.className += ' red-mid'}
+            else {task_cal_box.className += ' red-high'}
             break;
           }
         }
+        task_cal_box.innerText = currentTask.name
+        taskDiv.appendChild(task_cal_box)
         box.appendChild(taskDiv);
       }
     });
@@ -285,7 +398,6 @@ document.getElementById("prev").addEventListener('click', () => {
 document.getElementById('add-new-task').addEventListener('click', (event) => {
   const form = document.getElementById('task-edit-form');
 
-  if (taskBeingEdited != -1) {
     tasks.forEach(currentTask => {
       if (currentTask.id == taskBeingEdited) {
         change = document.getElementById('editButton' + currentTask.id)
@@ -293,7 +405,7 @@ document.getElementById('add-new-task').addEventListener('click', (event) => {
         taskBeingEdited = -1
       }
     }) 
-  }
+  
 
   if (form.hasAttribute('hidden')) {
     taskBeingEdited = -1;
@@ -302,6 +414,7 @@ document.getElementById('add-new-task').addEventListener('click', (event) => {
     document.getElementById('task-name-edit').value = "";
     document.getElementById('task-category-edit').value = "";
     setTaskEditFormPriority(1);
+    setTaskColorForm("grey")
     newDueDate = new Date();
     document.getElementById('task-date-edit').valueAsDate = newDueDate;
 
@@ -321,6 +434,7 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
   const categoryField = event.target.elements[1];
   const priorityField = document.querySelector('input[name="task-priority-edit"]:checked');
   const dueDateField = document.getElementById('task-date-edit');
+  const colorField = document.querySelector('input[name="task-color"]:checked')
 
   var valid = true;
   var priority = 1;
@@ -328,6 +442,14 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
     priority = parseInt(priorityField.value);
   } else {
     valid = false;
+  }
+
+  var color = 3
+  if (colorField) {
+    color = colorField.value
+  }
+  else {
+    valid = false
   }
 
   const name = nameField.value.trim();
@@ -365,16 +487,19 @@ document.getElementById('task-edit-form').addEventListener('submit', async (even
 
   if (valid) {
     if (taskBeingEdited < 0) {
-      window.electronAPI.addTask(name, category, priority, dueDate);
+      window.electronAPI.addTask(name, category, priority, dueDate, color);
     } else {
-      window.electronAPI.editTask(taskBeingEdited, name, category, priority, dueDate);
+      window.electronAPI.editTask(taskBeingEdited, name, category, priority, dueDate, color);
     }
+
     await refreshTasks();
+
     if (document.getElementById('tasks-card-view').hasAttribute('hidden')) {
       renderCalendar();
     } else {
       renderCardView();
     } 
+
     if (document.getElementById('add-new-task').innerText != 'Add New Task') {
       document.getElementById('add-new-task').innerText = 'Add New Task'
     } 
