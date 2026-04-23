@@ -92,7 +92,7 @@ body {
 
 .calendar-date-box-dark {
     border: 2px solid rgb(27, 56, 27);
-    background-color: rgb(102, 116, 102);
+    background-color: rgb(105, 142, 105);
 }
 
 .calendar-date-number {
@@ -111,33 +111,6 @@ body {
     font-size: 12px;
     max-height: 20%;
     display: block;
-}
-
-.task_low {
-    border: 2px solid rgb(135, 137, 9);
-    background-color: rgb(223, 222, 172);
-    margin: 3px;
-    padding: 1px;
-    text-shadow: none;
-    color: black;
-}
-
-.task_mid {
-    border: 2px solid rgb(155, 106, 8);
-    background-color: rgb(222, 192, 146);
-    margin: 3px;
-    padding: 1px;
-    text-shadow: none;
-    color: black;
-}
-
-.task_high {
-    border: 2px solid rgb(106, 12, 7);
-    background-color: rgb(212, 183, 180);
-    margin: 3px;
-    padding: 1px;
-    text-shadow: none;
-    color: black;
 }
 
 .p {
@@ -218,4 +191,86 @@ body {
     text-shadow: 1px 1px 2px rgb(111, 111, 111);
     border-radius: 100px;
     border: 3px solid rgb(38, 63, 63);;
+}
+
+.task_priority {
+    margin: 3px;
+    padding: 1px;
+    text-shadow: none;
+    color: white;
+    border: 2px solid;
+}
+
+.task-color-box {
+    border: 2px solid;
+    min-height: 15px;
+    min-width: 120px;
+    max-width: 120px;
+    max-height: 15px;
+}
+
+.blue-low {
+    background-color: rgb(42, 138, 207);
+    border-color: rgb(3, 57, 96);
+}
+.blue-mid {
+    background-color: rgb(41, 105, 152);
+    border-color: rgb(3, 57, 96);
+}
+
+.blue-high {
+    background-color: rgb(25, 78, 116);
+    border-color: rgb(3, 57, 96);
+}
+
+.green-low {
+    background-color: rgb(21, 179, 15);
+    border-color: rgb(2, 64, 0);
+}
+.green-mid {
+    background-color: rgb(20, 141, 16);
+    border-color: rgb(2, 64, 0);
+}
+.green-high {
+    background-color: rgb(12, 86, 10);
+    border-color: rgb(2, 64, 0);
+}
+
+.grey-low {
+    background-color: rgb(146, 158, 158);
+    border-color: rgb(57, 57, 57);
+}
+.grey-mid {
+    background-color: rgb(112, 121, 121);
+    border-color: rgb(57, 57, 57);
+}
+.grey-high {
+    background-color: rgb(71, 74, 74);
+    border-color: rgb(57, 57, 57);
+}
+
+.purple-low {
+    background-color: rgb(209, 34, 204);
+    border-color: rgb(53, 4, 51);
+}
+.purple-mid {
+    background-color: rgb(162, 37, 158);
+    border-color: rgb(53, 4, 51);
+}
+.purple-high {
+    background-color: rgb(101, 13, 98);
+    border-color: rgb(53, 4, 51);
+}
+
+.red-low {
+    background-color: rgb(219, 14, 14);
+    border-color: rgb(68, 5, 5);
+}
+.red-mid {
+    background-color: rgb(179, 5, 5);
+    border-color: rgb(68, 5, 5);
+}
+.red-high {
+    background-color: rgb(122, 11, 11);
+    border-color: rgb(68, 5, 5);
 }
