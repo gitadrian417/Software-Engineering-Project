@@ -191,7 +191,10 @@ function createTaskCard(task) {
     } 
         
     else {
-      editButton.innerText = "Edit";
+      tasks.forEach(currentTask => {
+          change = document.getElementById('editButton' + currentTask.id)
+          change.innerText = "Edit"
+      }) 
       form.setAttribute('hidden', 'hidden');
       taskBeingEdited = -1;
       const createButton = document.getElementById('add-new-task')
@@ -204,17 +207,20 @@ function createTaskCard(task) {
   const delButton = document.createElement("button");
   delButton.innerText = "Delete";
   delButton.id = 'delButton'
-  delButton.addEventListener('click', () => {
+  delButton.addEventListener('click', async () => {
     document.getElementById("task-card-"+task.id).remove();
     window.electronAPI.removeTask(task.id);
+    await refreshTasks()
+    if (tasks.length == 0) {
+      renderCardView()
+      console.log(tasks.length)
+    }
   });
 
   leftSpan.appendChild(taskName);
   leftSpan.appendChild(taskCategory);
   leftSpan.appendChild(taskColor)
-          leftSpan.appendChild(colorbox)
-
-
+  leftSpan.appendChild(colorbox)
   
   rightSpan.appendChild(taskDueDate);
   rightSpan.appendChild(taskPriority);
@@ -228,6 +234,23 @@ function createTaskCard(task) {
 
 function renderCardView() {
   document.getElementById('tasks-card-view').replaceChildren();
+  if (tasks.length == 0) {
+    const empty_popup = document.createElement('div')
+    empty_popup.className = 'task-card';
+    const leftSpan = document.createElement('span');
+    const rightSpan = document.createElement('span');
+
+    const headtext = document.createElement('h2');
+    headtext.innerText = "You currently have no tasks";
+    const bodytext = document.createElement('p')
+    bodytext.innerText = "Try using the Add New Task button to create a task. The task will show up here once properly made"
+
+    leftSpan.appendChild(headtext)
+    leftSpan.appendChild(bodytext)
+    empty_popup.appendChild(leftSpan)
+    empty_popup.appendChild(rightSpan)
+    document.getElementById('tasks-card-view').appendChild(empty_popup)
+  }
   for (task of tasks) {
     createTaskCard(task);
   }
