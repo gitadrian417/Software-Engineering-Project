@@ -213,7 +213,6 @@ function createTaskCard(task) {
     await refreshTasks()
     if (tasks.length == 0) {
       renderCardView()
-      console.log(tasks.length)
     }
   });
 
