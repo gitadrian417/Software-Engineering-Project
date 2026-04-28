@@ -62,6 +62,7 @@ function setTaskEditFormPriority(priority) {
     }
   }
 }
+
 function setTaskColorForm(color) {
   const radio = document.getElementsByName('task-color');
   for (option of radio) {
@@ -206,13 +207,13 @@ function createTaskCard(task) {
 
   const delButton = document.createElement("button");
   delButton.innerText = "Delete";
-  delButton.id = 'delButton'
+  delButton.id = 'delButton';
   delButton.addEventListener('click', async () => {
     document.getElementById("task-card-"+task.id).remove();
     window.electronAPI.removeTask(task.id);
-    await refreshTasks()
+    await refreshTasks();
     if (tasks.length == 0) {
-      renderCardView()
+      renderCardView();
     }
   });
 
@@ -232,7 +233,30 @@ function createTaskCard(task) {
 }
 
 function renderCardView() {
-  document.getElementById('tasks-card-view').replaceChildren();
+  cardView = document.getElementById('tasks-card-view');
+  cardView.replaceChildren();
+  
+  sortButton1 = document.createElement('button'); // Sort by category
+  sortButton1.innerText = "Sort by Category";
+  sortButton1.id = 'sort-button-category';
+  sortButton1.addEventListener('click', async () => {
+    window.electronAPI.sortTasks('category');
+    await refreshTasks();
+    renderCardView();
+  });
+
+  sortButton2 = document.createElement('button'); // Sort by priority
+  sortButton2.innerText = "Sort by Priority";
+  sortButton2.id = 'sort-button-priority';
+  sortButton2.addEventListener('click', async () => {
+    window.electronAPI.sortTasks('priority');
+    await refreshTasks();
+    renderCardView();
+  });
+
+  cardView.appendChild(sortButton1);
+  cardView.appendChild(sortButton2);
+
   if (tasks.length == 0) {
     const empty_popup = document.createElement('div')
     empty_popup.className = 'task-card';

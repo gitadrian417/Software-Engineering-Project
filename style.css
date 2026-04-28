@@ -8,6 +8,17 @@ body {
     gap: 10px;
 }
 
+button {
+    height: 50px;
+    font-size: 20px;
+    font-style: bold;
+    background-color: rgb(194, 223, 194);
+    text-shadow: 1px 1px 2px rgb(111, 111, 111);
+    border-radius: 100px;
+    border: 3px solid rgb(38, 63, 63);
+    margin: 5px;
+}
+
 .tasks-card-view {
     background-color: darkslategray;
 }
@@ -178,7 +189,7 @@ body {
     background-color: rgb(194, 223, 194);
     text-shadow: 1px 1px 2px rgb(111, 111, 111);
     border-radius: 100px;
-    border: 3px solid rgb(38, 63, 63);;
+    border: 3px solid rgb(38, 63, 63);
     margin: 5px;
 }
 
@@ -190,7 +201,7 @@ body {
     background-color: rgb(194, 223, 194);
     text-shadow: 1px 1px 2px rgb(111, 111, 111);
     border-radius: 100px;
-    border: 3px solid rgb(38, 63, 63);;
+    border: 3px solid rgb(38, 63, 63);
 }
 
 .task_priority {

@@ -14,7 +14,7 @@ let tray = null;
 // Name: string
 // Category: string
 // Due Date: Date object
-// Priority: integer (1-3)
+// Priority: integer (0-2)
 
 class Task {
   constructor(id, name, category, priority, dueDate, color) {
@@ -100,6 +100,28 @@ function getTasks(event) {
   return tasks;
 }
 
+function taskSortCategory(a, b) {
+  categoryCompare = a.category.localeCompare(b.category);
+  if (categoryCompare == 0) {
+    return a.name.localeCompare(b.name);
+  }
+  return categoryCompare;
+}
+
+function taskSortPriority(a, b) {
+  return b.priority - a.priority;
+}
+
+function sortTasks(event, sortBy) {
+  if (sortBy == 'category') {
+    tasks.sort(taskSortCategory);
+  } else if (sortBy == 'priority') {
+    tasks.sort(taskSortPriority);
+  } else {
+    console.log(`Error: unknown sorting option ${sortBoy}`);
+  }
+}
+
 function saveTasksToFile(tasks) {
   const contents = [];
   for (const task of tasks) {
@@ -107,8 +129,9 @@ function saveTasksToFile(tasks) {
     record.push(task.id);
     record.push(task.name);
     record.push(task.category);
-    record.push(task.priority);
+    record.push(String(task.priority));
     record.push(task.dueDate.toISOString());
+    //record.push(task.color);
     const result1 = record.join(",");
     contents.push(result1);
   }
@@ -136,9 +159,10 @@ function loadTasksFromFile() {
     const id = entries[0];
     const name = entries[1];
     const category = entries[2];
-    const priority = parseInt(entries[3]);
+    const priority = parseInt(entries[3], 10);
     const date = new Date(entries[4]);
-    const task = new Task(id, name, category, priority, date);
+    const color = "color";
+    const task = new Task(id, name, category, priority, date, color);
     tasks.push(task);
     //console.log(id);
     //console.log(name);
@@ -159,7 +183,7 @@ const createWindow = () => {
     }
   });
   window.loadFile('index.html');
-  //window.webContents.openDevTools();
+  window.webContents.openDevTools();
   tray = new Tray(path.join(__dirname, 'icon.png'));
 
   window.on('close', (event) => {
@@ -187,9 +211,11 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
   loadTasksFromFile();
+  //tasks.sort(taskSortCategory);
   ipcMain.on('add-task', addTask);
   ipcMain.on('edit-task', editTask);
   ipcMain.on('remove-task', removeTask);
+  ipcMain.on('sort-tasks', sortTasks);
   ipcMain.handle('getTasks', getTasks);
   createWindow();
   generateTaskReminders();
